@@ -44,6 +44,14 @@
       const title=document.createElement('h2');title.textContent=name;
       const subtitle=document.createElement('p');subtitle.className='sub';subtitle.textContent='Véhicule du centre';
       const tag=document.createElement('span');tag.className='tag';tag.textContent='Fiche à venir';
+      if (name === 'VSAV 1') {
+  card.style.cursor = 'pointer';
+  tag.textContent = 'Voir la fiche';
+  card.addEventListener('click', function() {
+    window.location.href = 'vsav1.html';
+  });
+}
+
       card.append(visual,title,subtitle,tag);grid.append(card);
     }
     document.getElementById('count').textContent=`${filtered.length} véhicule${filtered.length>1?'s':''}`;
