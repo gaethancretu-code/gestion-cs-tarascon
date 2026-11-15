@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#b91c1c">
+  <title>Véhicules — CS Tarascon-sur-Ariège</title>
+  <style>
+    :root{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#1f2937;background:#f8fafc}
+    *{box-sizing:border-box}body{margin:0}header{background:linear-gradient(120deg,#991b1b,#dc2626);color:white;padding:28px 20px 38px}
+    .wrap{max-width:1040px;margin:auto}.back{display:inline-block;color:white;text-decoration:none;font-weight:650;margin-bottom:22px}
+    .eyebrow{text-transform:uppercase;letter-spacing:.12em;font-size:.75rem;opacity:.86}h1{font-size:clamp(1.8rem,5vw,2.6rem);margin:7px 0}header p{margin:0;opacity:.92}
+    main{padding:25px 20px 55px}.toolbar{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:20px}
+    .count{font-weight:700;color:#991b1b}.search{width:min(100%,350px);padding:12px 14px;border:1px solid #cbd5e1;border-radius:12px;font:inherit;background:white}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px}
+    .vehicle{background:white;border:1px solid #e2e8f0;border-radius:17px;padding:21px;box-shadow:0 3px 12px #0f172a08}
+    .symbol{height:105px;border-radius:12px;background:#fef2f2;display:flex;align-items:center;justify-content:center;color:#b91c1c;margin-bottom:17px}
+    .symbol svg{width:70px;height:70px}h2{font-size:1.25rem;margin:0 0 8px}.sub{color:#64748b;font-size:.88rem;margin:0 0 18px}
+    .tag{display:inline-block;padding:7px 10px;border-radius:9px;background:#f1f5f9;color:#475569;font-size:.8rem;font-weight:650}
+    .note{margin-top:24px;color:#64748b;font-size:.88rem;line-height:1.55}.empty{display:none;color:#64748b;padding:20px 0}
+    footer{text-align:center;color:#64748b;font-size:.8rem;padding:20px}
+  </style>
+</head>
+<body>
+<header><div class="wrap"><a class="back" href="./index.html">← Retour à l'accueil</a><div class="eyebrow">Centre de secours · Tarascon-sur-Ariège</div><h1>🚒 Nos véhicules</h1><p>Retrouvez les engins du centre et, prochainement, leurs inventaires et vérifications.</p></div></header>
+<main class="wrap">
+  <div class="toolbar"><span class="count" id="count">7 véhicules</span><input class="search" id="search" type="search" placeholder="Rechercher un véhicule…" aria-label="Rechercher un véhicule"></div>
+  <section class="grid" id="grid" aria-label="Liste des véhicules"></section>
+  <p class="empty" id="empty">Aucun véhicule ne correspond à votre recherche.</p>
+  <p class="note">Les photos, les fiches détaillées, les vérifications et l'ajout de véhicules depuis l'application seront disponibles lors des prochaines étapes. Cette première version est une page de présentation : aucune donnée personnelle ni inventaire n'est stocké ici.</p>
+</main>
+<footer>CS Tarascon-sur-Ariège · Espace véhicules</footer>
+<script>
+  const vehicles = ['VSAV 1','VSAV 2','VSR','FPT','CCF','CCGC','VLTT 1'];
+  const icon = `<svg viewBox="0 0 80 80" fill="none" aria-hidden="true"><path d="M10 25h38v30H10zM48 35h13l10 12v8H48z" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/><path d="M19 20h20M29 10v20M10 44h61" stroke="currentColor" stroke-width="4" stroke-linecap="round"/><circle cx="23" cy="57" r="7" fill="white" stroke="currentColor" stroke-width="4"/><circle cx="59" cy="57" r="7" fill="white" stroke="currentColor" stroke-width="4"/></svg>`;
+  const grid = document.getElementById('grid');
+  const search = document.getElementById('search');
+  function render(){
+    const filtered = vehicles.filter(name=>name.toLocaleLowerCase('fr').includes(search.value.trim().toLocaleLowerCase('fr')));
+    grid.replaceChildren();
+    for(const name of filtered){
+      const card=document.createElement('article');card.className='vehicle';
+      const visual=document.createElement('div');visual.className='symbol';visual.innerHTML=icon;
+      const title=document.createElement('h2');title.textContent=name;
+      const subtitle=document.createElement('p');subtitle.className='sub';subtitle.textContent='Véhicule du centre';
+      const tag=document.createElement('span');tag.className='tag';tag.textContent='Fiche à venir';
+      card.append(visual,title,subtitle,tag);grid.append(card);
+    }
+    document.getElementById('count').textContent=`${filtered.length} véhicule${filtered.length>1?'s':''}`;
+    document.getElementById('empty').style.display=filtered.length?'none':'block';
+  }
+  search.addEventListener('input',render);render();
+</script>
+</body>
+</html>
