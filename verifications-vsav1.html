@@ -3,74 +3,104 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Vérifications — VSAV 1</title>
 <style>
 *{box-sizing:border-box}
 body{
-  margin:0;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-  background:#f5f6f8;
-  color:#222;
+ margin:0;
+ font-family:system-ui,-apple-system,Segoe UI,sans-serif;
+ background:#f6f7fa;
+ color:#222;
 }
 header{
-  background:#b71920;
-  color:white;
-  padding:22px 18px;
+ background:linear-gradient(120deg,#a50913,#ed2227);
+ color:white;
+ padding:24px 18px;
 }
 .wrap{max-width:920px;margin:auto}
 .back{
-  color:white;
-  text-decoration:none;
-  font-size:14px;
+ color:white;
+ text-decoration:none;
+ font-size:14px;
 }
-h1{margin:18px 0 6px;font-size:28px}
-header p{margin:0;color:#ffe6e7}
-main{padding:24px 16px 50px}
-.intro{color:#59616c;line-height:1.5}
+h1{
+ margin:18px 0 6px;
+ font-size:29px;
+}
+header p{
+ margin:0;
+ color:#ffe6e7;
+}
+main{padding:24px 16px 60px}
+.intro{
+ color:#59616c;
+ line-height:1.6;
+ margin-bottom:22px;
+}
+.notice{
+ background:#fff4df;
+ border:1px solid #f0cb8d;
+ border-radius:12px;
+ padding:14px;
+ font-size:14px;
+ line-height:1.5;
+ margin-bottom:22px;
+}
 .grid{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:14px;
-  margin-top:22px;
+ display:grid;
+ grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:14px;
 }
 .card{
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-  padding:22px;
-  background:white;
-  border:1px solid #e1e3e8;
-  border-radius:15px;
-  text-decoration:none;
-  color:inherit;
-  min-height:145px;
+ display:flex;
+ flex-direction:column;
+ gap:12px;
+ padding:22px;
+ background:white;
+ border:1px solid #e1e3e8;
+ border-radius:15px;
+ text-decoration:none;
+ color:inherit;
+ min-height:155px;
+ transition:transform .15s,border-color .15s;
 }
-a.card{cursor:pointer}
-a.card:focus-visible{
-  outline:3px solid #b71920;
-  outline-offset:3px;
+.card:hover{
+ transform:translateY(-2px);
+ border-color:#bd1b25;
 }
-.card h2{font-size:18px;margin:0}
+.card:focus-visible{
+ outline:3px solid #b71920;
+ outline-offset:3px;
+}
+.card h2{
+ font-size:19px;
+ margin:0;
+}
 .card p{
-  font-size:14px;
-  color:#66707d;
-  margin:0;
-  line-height:1.5;
+ font-size:14px;
+ color:#66707d;
+ margin:0;
+ line-height:1.5;
 }
 .status{
-  font-size:12px;
-  font-weight:600;
-  color:#9b2328;
-  background:#fff0f0;
-  border-radius:30px;
-  padding:6px 10px;
-  align-self:flex-start;
-  margin-top:auto;
+ font-size:12px;
+ font-weight:700;
+ color:#9b2328;
+ background:#fff0f0;
+ border-radius:30px;
+ padding:7px 11px;
+ align-self:flex-start;
+ margin-top:auto;
 }
-.disabled{opacity:.65}
+footer{
+ margin-top:35px;
+ text-align:center;
+ color:#777;
+ font-size:13px;
+}
 @media(max-width:540px){
-  .grid{grid-template-columns:1fr}
+ .grid{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -88,56 +118,69 @@ a.card:focus-visible{
 
 <main class="wrap">
 
+<div class="notice">
+<strong>Prototype de démonstration.</strong>
+Les vérifications sont enregistrées uniquement
+sur l'appareil et le navigateur utilisés.
+Aucune synchronisation ni sauvegarde serveur.
+Ne pas utiliser pour des vérifications opérationnelles.
+</div>
+
 <p class="intro">
-Sélectionnez un compartiment pour accéder à son inventaire
-et effectuer les vérifications du matériel.
+Sélectionnez un compartiment pour accéder à ses équipements,
+effectuer les vérifications et signaler les anomalies.
 </p>
 
 <div class="grid">
 
 <a class="card" href="cellule-gauche-vsav1.html">
 <h2>🚑 Cellule côté gauche</h2>
-<p>Accéder à l'inventaire et vérifier les équipements.</p>
-<span class="status">Ouvrir l'inventaire →</span>
+<p>Vérification du matériel de la cellule côté gauche.</p>
+<span class="status">Accéder aux vérifications →</span>
 </a>
 
 <a class="card" href="cellule-droite-vsav1.html">
 <h2>🚑 Cellule côté droit</h2>
-<p>Accéder à l'inventaire et vérifier les équipements.</p>
-<span class="status">Ouvrir l'inventaire →</span>
+<p>Vérification du matériel de la cellule côté droit.</p>
+<span class="status">Accéder aux vérifications →</span>
 </a>
 
-<div class="card disabled">
-<h2>🚑 Cellule du fond</h2>
-<p>Inventaire à ajouter prochainement.</p>
-<span class="status">À venir</span>
-</div>
+<a class="card" href="cellule-fond-vsav1.html">
+<h2>🚑 Cellule au fond</h2>
+<p>Matériel général et tiroirs rouge, bleu, noir, vert et jaune.</p>
+<span class="status">Accéder aux vérifications →</span>
+</a>
 
-<div class="card disabled">
+<a class="card" href="sac-oxygenotherapie-vsav1.html">
 <h2>🫁 Sac d'oxygénothérapie</h2>
-<p>Inventaire à ajouter prochainement.</p>
-<span class="status">À venir</span>
-</div>
+<p>Vérification des poches extérieures et de l'intérieur du sac.</p>
+<span class="status">Accéder aux vérifications →</span>
+</a>
 
-<div class="card disabled">
+<a class="card" href="sac-prompt-secours-vsav1.html">
 <h2>🎒 Sac prompt-secours</h2>
-<p>Inventaire à ajouter prochainement.</p>
-<span class="status">À venir</span>
-</div>
+<p>Vérification des poches et pochettes du sac.</p>
+<span class="status">Accéder aux vérifications →</span>
+</a>
 
-<div class="card disabled">
+<a class="card" href="materiel-exterieur-vsav1.html">
 <h2>🚧 Matériel extérieur et balisage</h2>
-<p>Inventaire à ajouter prochainement.</p>
-<span class="status">À venir</span>
-</div>
+<p>Vérification du matériel extérieur et de signalisation.</p>
+<span class="status">Accéder aux vérifications →</span>
+</a>
 
-<div class="card disabled">
+<a class="card" href="poste-conduite-vsav1.html">
 <h2>🚑 Poste de conduite</h2>
-<p>Inventaire à ajouter prochainement.</p>
-<span class="status">À venir</span>
-</div>
+<p>Vérification des équipements et documents de la cabine.</p>
+<span class="status">Accéder aux vérifications →</span>
+</a>
 
 </div>
+
+<footer>
+CS Tarascon-sur-Ariège — Prototype VSAV 1
+</footer>
+
 </main>
 </body>
 </html>
