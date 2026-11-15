@@ -1,0 +1,479 @@
+
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VSAV 1 — Poste de conduite</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;background:#f6f7fa;color:#222;
+ font-family:system-ui,-apple-system,Segoe UI,sans-serif;
+}
+header{
+ background:linear-gradient(120deg,#a50913,#ed2227);
+ color:white;
+ padding:24px max(18px,calc((100vw - 900px)/2));
+}
+header a{
+ color:white;text-decoration:none;font-size:14px;
+}
+h1{margin:18px 0 5px;font-size:29px}
+main{
+ max-width:900px;margin:auto;
+ padding:20px 15px 70px;
+}
+.notice{
+ background:#fff4df;
+ border:1px solid #f0cb8d;
+ padding:14px;border-radius:12px;
+ font-size:14px;line-height:1.5;
+}
+.bar{
+ display:flex;justify-content:space-between;
+ align-items:center;gap:12px;
+ flex-wrap:wrap;margin:20px 0;
+}
+.muted{color:#666;font-size:14px}
+.section{margin:24px 0 32px}
+.section h2{
+ font-size:20px;margin:0 0 12px;
+ padding:13px 15px;border-radius:11px;
+ background:#e7f0ff;
+ border-left:6px solid #3587e8;
+}
+.grid{
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+ gap:12px;
+}
+.card{
+ background:white;
+ border:1px solid #dddfe5;
+ border-radius:14px;padding:16px;
+ box-shadow:0 2px 7px #00000008;
+}
+.card.done{border-color:#73b58a}
+.card h3{
+ font-size:17px;margin:0 0 8px;
+ line-height:1.4;
+}
+.control{
+ display:flex;align-items:center;
+ gap:10px;flex-wrap:wrap;
+ margin-top:14px;
+}
+input[type=number]{
+ width:85px;padding:9px;
+ border:1px solid #bbb;
+ border-radius:8px;font-size:16px;
+}
+input[type=checkbox]{
+ width:21px;height:21px;
+ accent-color:#bb141d;
+}
+button{
+ background:#b30e1a;color:white;
+ border:0;border-radius:9px;
+ padding:10px 13px;
+ font-size:14px;cursor:pointer;
+}
+button.secondary{
+ background:white;color:#a30b16;
+ border:1px solid #bb141d;
+}
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible{
+ outline:3px solid #efa8aa;
+}
+.alert{
+ background:#fff0ec;
+ border-left:4px solid #ba2020;
+ border-radius:8px;
+ padding:12px;margin-top:12px;
+}
+.alert strong{color:#8c1010}
+.details{
+ margin-top:10px;padding:12px;
+ background:#f7f7f9;
+ border-radius:9px;
+}
+.details[hidden]{display:none}
+textarea{
+ width:100%;min-height:75px;
+ padding:10px;
+ border:1px solid #bbb;
+ border-radius:8px;
+ font:inherit;margin:8px 0;
+}
+footer{
+ text-align:center;color:#777;
+ font-size:13px;margin-top:30px;
+}
+</style>
+</head>
+<body>
+
+<header>
+<a href="verifications-vsav1.html">
+← Retour aux vérifications du VSAV 1
+</a>
+<div style="font-size:12px;letter-spacing:1px;margin-top:20px">
+CS TARASCON-SUR-ARIÈGE
+</div>
+<h1>🚑 Poste de conduite</h1>
+<div>VSAV 1 · Vérification du matériel</div>
+</header>
+
+<main>
+<div class="notice">
+<strong>Prototype de démonstration.</strong>
+Les saisies sont enregistrées uniquement dans ce navigateur.
+Aucune synchronisation, authentification ou sauvegarde serveur.
+Ne pas utiliser pour des vérifications opérationnelles.
+</div>
+
+<div class="bar">
+<div>
+<strong id="progress">Chargement…</strong>
+<div class="muted">
+Saisis la quantité présente lorsqu'une référence est indiquée.
+Sinon, coche « Vérifié ».
+</div>
+</div>
+<button class="secondary" id="reset">
+Réinitialiser le test
+</button>
+</div>
+
+<div id="items"></div>
+
+<footer>
+Prototype VSAV 1 — données locales de test
+</footer>
+</main>
+
+<script>
+const groups=[
+ {
+  id:"portiere-conducteur",
+  name:"Portière conducteur",
+  items:[
+   ["Câle",null],
+   ["GHV équipier",null]
+  ]
+ },
+ {
+  id:"siege-conducteur",
+  name:"Siège conducteur",
+  items:[
+   ["En dessous : cric",null],
+   ["Derrière : coupe-ceinture + brise-vitre",null]
+  ]
+ },
+ {
+  id:"entre-sieges",
+  name:"Entre siège conducteur - équipier",
+  items:[
+   ["Lampes",null]
+  ]
+ },
+ {
+  id:"tableau-milieu",
+  name:"Tableau de bord milieu",
+  items:[
+   ["Certificat accouchement",null],
+   ["Certificat enquête noyade",null],
+   ["Fiche SINUS",null],
+   ["Protocole SSSM + ISP",null],
+   ["Fiches traduction plastifiées (espagnol, néerlandais, allemand, anglais, italien)",null],
+   ["Fiches décharges",null],
+   ["Fiche réflexes détresses vitales (RCP, hémorragies, obstructions des voies aériennes)",null],
+   ["Plans (Arignac, Mercus, Quié, Purpan)",null],
+   ["Bloc fiches bilans",null]
+  ]
+ },
+ {
+  id:"tableau-passager",
+  name:"Tableau de bord côté passager",
+  items:[
+   ["Boîtes de gants (S, M, L, XL)",4],
+   ["Boîte de masques à usage unique",null],
+   ["Tablette avec fiche bilan",null],
+   ["Au-dessus : GHV équipier",null]
+  ]
+ },
+ {
+  id:"boite-gants",
+  name:"Boîte à gants",
+  items:[
+   ["Pochette noire (manuel véhicule)",null],
+   ["Pochette bleue (carnet de bord carburant, carnet de bord autoroute, carnet d'entretien, contrôle technique)",null]
+  ]
+ },
+ {
+  id:"portiere-passager",
+  name:"Portière passager",
+  items:[
+   ["GHV chef d'agrès",null]
+  ]
+ },
+ {
+  id:"siege-chef",
+  name:"Siège chef d'agrès",
+  items:[
+   ["En dessous : ampoules + chaînes",null],
+   ["Derrière : projecteur 12V",null]
+  ]
+ }
+];
+
+const key="cs-tarascon-vsav1-poste-conduite-prototype-v1";
+let state={};
+
+try{
+ state=JSON.parse(localStorage.getItem(key)||"{}");
+ if(!state || typeof state!=="object" || Array.isArray(state)){
+  state={};
+ }
+}catch{
+ state={};
+}
+
+function save(){
+ try{
+  localStorage.setItem(key,JSON.stringify(state));
+ }catch{
+  alert("Impossible d'enregistrer les données localement.");
+ }
+}
+
+function el(tag,cls,txt){
+ const node=document.createElement(tag);
+ if(cls)node.className=cls;
+ if(txt!==undefined)node.textContent=txt;
+ return node;
+}
+
+function itemId(group,index){
+ return group.id+"-"+index;
+}
+
+function verified(data,expected){
+ if(expected===null)return data.checked===true;
+ const value=data.quantity;
+ return value!==undefined &&
+  value!==null &&
+  value!=="" &&
+  Number.isInteger(Number(value)) &&
+  Number(value)>=0;
+}
+
+function updateProgress(){
+ let total=0,done=0;
+
+ groups.forEach(group=>{
+  group.items.forEach(([name,expected],index)=>{
+   total++;
+   const data=state[itemId(group,index)]||{};
+   if(verified(data,expected))done++;
+  });
+ });
+
+ document.getElementById("progress").textContent=
+  done+" / "+total+" matériels vérifiés";
+}
+
+const root=document.getElementById("items");
+
+function render(){
+ root.replaceChildren();
+
+ groups.forEach(group=>{
+  const section=el("section","section");
+  section.append(el("h2","",group.name));
+  const grid=el("div","grid");
+
+  group.items.forEach(([name,expected],index)=>{
+   const id=itemId(group,index);
+   const data=state[id]||{};
+
+   const card=el(
+    "article",
+    "card"+(verified(data,expected)?" done":"")
+   );
+
+   card.append(el("h3","",name));
+
+   if(expected!==null){
+    card.append(
+     el("div","muted","Quantité de référence : "+expected)
+    );
+   }
+
+   const line=el("div","control");
+
+   if(expected!==null){
+    const label=el("label","","Présent : ");
+    const input=document.createElement("input");
+
+    input.type="number";
+    input.min="0";
+    input.step="1";
+    input.inputMode="numeric";
+    input.placeholder="Qté";
+    input.value=data.quantity??"";
+    input.setAttribute(
+     "aria-label",
+     "Quantité présente pour "+name
+    );
+
+    input.addEventListener("input",()=>{
+     (state[id]??={}).quantity=input.value;
+     save();
+     card.classList.toggle(
+      "done",
+      verified(state[id],expected)
+     );
+     updateProgress();
+    });
+
+    label.append(input);
+    line.append(label);
+   }else{
+    const input=document.createElement("input");
+    input.type="checkbox";
+    input.id="check-"+id;
+    input.checked=!!data.checked;
+
+    input.addEventListener("change",()=>{
+     (state[id]??={}).checked=input.checked;
+     save();
+     card.classList.toggle("done",input.checked);
+     updateProgress();
+    });
+
+    const label=el("label","","Vérifié");
+    label.htmlFor=input.id;
+    line.append(input,label);
+   }
+
+   card.append(line);
+
+   const active=(data.anomalies||[])
+    .filter(an=>!an.resolved);
+
+   if(active.length){
+    const alertBox=el("div","alert");
+    alertBox.append(
+     el(
+      "strong",
+      "",
+      active.length+" anomalie(s) signalée(s) — test"
+     )
+    );
+
+    active.forEach(an=>{
+     alertBox.append(el("p","",an.text));
+
+     const resolve=el(
+      "button",
+      "secondary",
+      "Marquer résolue (test)"
+     );
+
+     resolve.onclick=()=>{
+      an.resolved=true;
+      save();
+      render();
+     };
+
+     alertBox.append(resolve);
+    });
+
+    card.append(alertBox);
+   }
+
+   const toggle=el(
+    "button",
+    "secondary",
+    "⚠ Signaler une anomalie"
+   );
+   toggle.style.marginTop="12px";
+
+   const details=el("div","details");
+   details.hidden=true;
+
+   const textarea=document.createElement("textarea");
+   textarea.placeholder="Décris le problème constaté…";
+   textarea.setAttribute(
+    "aria-label",
+    "Anomalie pour "+name
+   );
+
+   const submit=el(
+    "button",
+    "",
+    "Enregistrer l'anomalie (test)"
+   );
+
+   submit.onclick=()=>{
+    const value=textarea.value.trim();
+
+    if(!value){
+     alert("Décris le problème avant de continuer.");
+     return;
+    }
+
+    (state[id]??={}).anomalies??=[];
+    state[id].anomalies.push({
+     text:value,
+     resolved:false,
+     at:new Date().toISOString()
+    });
+
+    save();
+    render();
+   };
+
+   details.append(
+    el(
+     "div",
+     "muted",
+     "Cette anomalie est enregistrée uniquement dans ce navigateur."
+    ),
+    textarea,
+    submit
+   );
+
+   toggle.onclick=()=>{
+    details.hidden=!details.hidden;
+   };
+
+   card.append(toggle,details);
+   grid.append(card);
+  });
+
+  section.append(grid);
+  root.append(section);
+ });
+
+ updateProgress();
+}
+
+document.getElementById("reset").onclick=()=>{
+ if(confirm(
+  "Effacer toutes les saisies et anomalies de test du poste de conduite ?"
+  )){
+  state={};
+  save();
+  render();
+ }
+};
+
+render();
+</script>
+</body>
+</html>
