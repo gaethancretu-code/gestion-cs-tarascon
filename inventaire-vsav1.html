@@ -1,0 +1,621 @@
+
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Inventaire — VSAV 1</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;background:#f6f7fa;color:#20242a;
+ font-family:system-ui,-apple-system,Segoe UI,sans-serif;
+}
+header{
+ background:linear-gradient(120deg,#a50913,#ed2227);
+ color:white;padding:24px 18px 30px;
+}
+.wrap{max-width:950px;margin:auto}
+.back{color:white;text-decoration:none;font-size:14px}
+h1{font-size:30px;margin:18px 0 5px}
+header p{margin:0;color:#ffe5e7}
+main{padding:22px 15px 65px}
+.search-panel{
+ background:white;border:1px solid #e0e2e8;
+ border-radius:16px;padding:18px;
+ box-shadow:0 3px 12px #00000008;
+}
+.search-panel label{display:block;font-weight:700;margin-bottom:10px}
+.search-row{display:flex;gap:9px}
+.search-row input{
+ width:100%;min-width:0;padding:14px;
+ border:1px solid #c8ccd5;border-radius:10px;
+ font:inherit;font-size:16px;
+}
+button{
+ padding:10px 14px;border:1px solid #b71920;
+ border-radius:10px;background:white;color:#a50913;
+ font:inherit;cursor:pointer;
+}
+input:focus-visible,button:focus-visible{
+ outline:3px solid #efa8aa;
+}
+.info{
+ font-size:14px;color:#626b77;
+ margin:12px 0 0;line-height:1.5;
+}
+.summary{
+ display:flex;justify-content:space-between;
+ flex-wrap:wrap;gap:10px;
+ margin:22px 0 16px;color:#626b77;font-size:14px;
+}
+.compartment{
+ margin:22px 0 30px;background:white;
+ border:1px solid #e0e2e8;
+ border-radius:15px;overflow:hidden;
+}
+.compartment>h2{
+ background:#fff0f0;color:#95121a;
+ font-size:21px;margin:0;padding:17px;
+}
+.group{padding:0 17px 15px}
+.group h3{
+ font-size:16px;margin:19px 0 8px;
+ padding:9px 12px;background:#f1f3f7;
+ border-left:5px solid #87909d;
+ border-radius:7px;
+}
+.group.red h3{background:#ffebeb;border-color:#c62828}
+.group.blue h3{background:#e7f0ff;border-color:#3587e8}
+.group.black h3{background:#e8e8e8;border-color:#222}
+.group.green h3{background:#e7f5e8;border-color:#268a46}
+.group.yellow h3{background:#fff7d9;border-color:#e2b526}
+.group.purple h3{background:#f2e8ff;border-color:#913bd2}
+.group.orange h3{background:#fff0df;border-color:#e69b47}
+.item{
+ display:flex;align-items:flex-start;
+ justify-content:space-between;gap:15px;
+ padding:12px 3px;border-bottom:1px solid #eceef2;
+}
+.item:last-child{border-bottom:0}
+.name{font-size:15px;line-height:1.45}
+.qty{
+ flex-shrink:0;min-width:36px;
+ text-align:center;font-weight:700;
+ background:#f0f2f5;border-radius:8px;
+ padding:5px 8px;font-size:14px;
+}
+.qty.empty{
+ background:transparent;color:#a1a6af;
+ font-weight:400;
+}
+.empty-message{
+ text-align:center;background:white;
+ padding:30px;border-radius:14px;color:#666;
+}
+footer{
+ text-align:center;color:#777;
+ font-size:13px;margin-top:30px;
+}
+</style>
+</head>
+<body>
+<header>
+<div class="wrap">
+<a class="back" href="vsav1.html">← Retour au VSAV 1</a>
+<h1>🔎 Inventaire — VSAV 1</h1>
+<p>Rechercher et localiser le matériel</p>
+</div>
+</header>
+
+<main class="wrap">
+<div class="search-panel">
+<label for="search">Rechercher un équipement</label>
+<div class="search-row">
+<input
+ id="search"
+ type="search"
+ placeholder="Ex. : BAVU, gants, couverture, brancard…"
+ autocomplete="off"
+>
+<button id="clear" type="button">Effacer</button>
+</div>
+<p class="info">
+Recherche dans tous les compartiments et rangements.
+Les quantités affichées sont celles de référence, lorsqu'elles
+sont connues. Cette page est en lecture seule.
+</p>
+</div>
+
+<div class="summary">
+<strong id="count"></strong>
+<span>7 compartiments · Inventaire de référence</span>
+</div>
+
+<div id="results"></div>
+
+<footer>
+CS Tarascon-sur-Ariège — Inventaire VSAV 1
+</footer>
+</main>
+
+<script>
+/*
+ Chaque équipement est défini par :
+ ["Nom du matériel", quantité]
+
+ Une quantité null signifie qu'aucune quantité
+ de référence n'a été renseignée.
+*/
+
+const inventory=[
+ {
+  name:"Cellule côté gauche",
+  groups:[
+   {
+    name:"Rangements supérieurs",
+    items:[
+     ["Blocs maintien tête",2],
+     ["Sangles araignées",null],
+     ["Sangles brancard cuillère",null],
+     ["Kit accouchements inopinés",null],
+     ["Kit AEV",null],
+     ["Kit Réanimation Néonatale",null]
+    ]
+   },
+   {
+    name:"Autres équipements de la cellule côté gauche",
+    items:[
+     ["Pompe",null],
+     ["Matelas Immobilisateur à Dépression",null],
+     ["Bouteille à oxygène de réserve (B5)",null],
+     ["Aspirateur de mucosités",null],
+     ["Attelle Cervico Thoracique",null],
+     ["Tablette pour le brancard",null],
+     ["Schiller",null],
+     ["Bouteille à oxygène (B15)",null]
+    ]
+   }
+  ]
+ },
+ {
+  name:"Cellule côté droit",
+  groups:[
+   {
+    name:"Rangements supérieurs",
+    items:[
+     ["Ballot d'essuie-tout plié",null],
+     ["Spray moussant désinfectant",null],
+     ["Couvertures de survie",5],
+     ["Draps",5]
+    ]
+   }
+  ]
+ },
+ {
+  name:"Cellule au fond",
+  groups:[
+   {
+    name:"Matériel général de la cellule au fond",
+    items:[
+     ["Sac d'attelles (1 grande, 1 moyenne, 1 petite)",null],
+     ["Colliers cervicaux (1 adulte, 1 enfant)",2],
+     ["Boîtes de gants (1 S, 1 M, 1 L)",3],
+     ["Kit membres sectionnés",null],
+     ["Brancard cuillère",null],
+     ["Chaise de transport",null]
+    ]
+   },
+   {
+    name:"Tiroir gauche haut",
+    items:[
+     ["Kit risque infectieux (ancien kit COVID)",null],
+     ["Kit risque infectieux",null]
+    ]
+   },
+   {
+    name:"Tiroir gauche bas",
+    items:[
+     ["Brancard souple",null]
+    ]
+   },
+   {
+    name:"Tiroir rouge",
+    color:"red",
+    items:[
+     ["Filets",null],
+     ["Bandes 4x10",3],
+     ["Bandes 4x5",3],
+     ["Compresses stériles",20],
+     ["Sparadraps",2],
+     ["Paire de ciseaux de Jesco",1],
+     ["Pansement compressif d'urgence",null],
+     ["Pansements américains 10x20",2],
+     ["Pansements américains 20x25",2],
+     ["Poches de froid",2],
+     ["Gel hydro-alcoolique",null],
+     ["Écharpes triangulaires",2],
+     ["Dakin",2],
+     ["Petites doses de sérum physiologique",5],
+     ["Grandes doses de sérum physiologique",2]
+    ]
+   },
+   {
+    name:"Tiroir bleu",
+    color:"blue",
+    items:[
+     ["BAVU adulte",null],
+     ["Filtre BAVU",null],
+     ["Masques haute concentration",2],
+     ["Lunettes à oxygène",2],
+     ["Canules de Guédel (T2, T3, T4)",3],
+     ["Cathéter d'aspiration",null]
+    ]
+   },
+   {
+    name:"Tiroir noir",
+    color:"black",
+    items:[
+     ["BAVU pédiatrique",null],
+     ["Filtre BAVU",null],
+     ["Masques haute concentration pédiatriques",2],
+     ["Lunettes haute concentration",2],
+     ["Canules de Guédel (T0, T1)",2]
+    ]
+   },
+   {
+    name:"Tiroir vert",
+    color:"green",
+    items:[
+     ["VOMIX",2],
+     ["Cathéter d'aspiration",null],
+     ["Raccords universels",2],
+     ["Tubulure d'aspiration",null],
+     ["Sac de rechange pour aspirateur de mucosités",null],
+     ["Aspirateur de mucosités manuel",null],
+     ["Champs stériles",null]
+    ]
+   },
+   {
+    name:"Tiroir jaune",
+    color:"yellow",
+    items:[
+     ["Peluche POMPI",null],
+     ["Câbles ECG",null],
+     ["Paires de lunettes de protection",2],
+     ["Haricots jetables",2],
+     ["Boîte OPCT",null],
+     ["Sacs DASRI",null],
+     ["Sacs DAOM",null]
+    ]
+   }
+  ]
+ },
+ {
+  name:"Sac d'oxygénothérapie",
+  groups:[
+   {
+    name:"Extérieur — Poche gauche (enfant)",
+    color:"blue",
+    items:[
+     ["BAVU",null],
+     ["Masques haute concentration",2],
+     ["Lunettes à oxygène",2],
+     ["Raccord universel",null],
+     ["Cathéter d'aspiration",null],
+     ["Canules de Guédel (T0, T1)",2]
+    ]
+   },
+   {
+    name:"Extérieur — Poche droite (adulte)",
+    color:"green",
+    items:[
+     ["BAVU",null],
+     ["Masques haute concentration",2],
+     ["Lunettes à oxygène",2],
+     ["Raccord universel",null],
+     ["Cathéter d'aspiration",null],
+     ["Canules de Guédel (T2, T3, T4)",3]
+    ]
+   },
+   {
+    name:"Extérieur — Poche du milieu",
+    color:"yellow",
+    items:[
+     ["Sac DASRI",null],
+     ["Sac DAOM",null]
+    ]
+   },
+   {
+    name:"Intérieur du sac",
+    color:"red",
+    items:[
+     ["Couvertures de survie",3],
+     ["Colliers cervicaux adultes",2],
+     ["Colliers cervicaux pédiatriques",2],
+     ["Bouteille d'oxygène B5",null]
+    ]
+   }
+  ]
+ },
+ {
+  name:"Sac prompt-secours",
+  groups:[
+   {
+    name:"Extérieur — Poche milieu haut",
+    color:"orange",
+    items:[
+     ["Kit damage control",null]
+    ]
+   },
+   {
+    name:"Extérieur — Poche milieu bas",
+    color:"orange",
+    items:[
+     ["Kit brûlures",null]
+    ]
+   },
+   {
+    name:"Extérieur — Poche côté droit",
+    color:"orange",
+    items:[
+     ["Couvertures de survie",4],
+     ["Gants en taille L (quelques)",null]
+    ]
+   },
+   {
+    name:"Intérieur — Pochette noire",
+    color:"black",
+    items:[
+     ["Couverture de survie",null],
+     ["Pansements américains 10x20",2],
+     ["Pansements américains 20x25",4],
+     ["Pansement compressif d'urgence",null]
+    ]
+   },
+   {
+    name:"Intérieur — Grande pochette bleue",
+    color:"blue",
+    items:[
+     ["Compresses stériles",20],
+     ["Ciseaux de Jesco",null],
+     ["Petites doses de sérum physiologique",5],
+     ["Grandes doses de sérum physiologique",2],
+     ["Paire de gants",null],
+     ["Bandes 4x10",3],
+     ["Bandes 4x5",3],
+     ["Sachet de filets",null],
+     ["Sparadraps",2],
+     ["Poche de froid",1]
+    ]
+   },
+   {
+    name:"Intérieur — Pochette rouge",
+    color:"red",
+    items:[
+     ["Lunettes de protection",4]
+    ]
+   },
+   {
+    name:"Intérieur — Pochette jaune",
+    color:"yellow",
+    items:[
+     ["Sac DAOM",null],
+     ["Sac DASRI",null],
+     ["Paire de gants en latex",null],
+     ["VOMIX",2],
+     ["Écharpes triangulaires",2]
+    ]
+   },
+   {
+    name:"Intérieur — Pochette violette",
+    color:"purple",
+    items:[
+     ["Appareil pour prise de tension manuelle",null],
+     ["Stéthoscope",null],
+     ["Brassard enfant",null],
+     ["Brassards adultes",2]
+    ]
+   }
+  ]
+ },
+ {
+  name:"Matériel extérieur et balisage",
+  groups:[
+   {
+    name:"Matériel extérieur et balisage",
+    color:"orange",
+    items:[
+     ["Cônes de Lubeck",4],
+     ["Extincteur",null],
+     ["Commande",null],
+     ["Mallette contenant 2 protections airbag (1 VL, 1 PL)",null],
+     ["Outils de forcement (OFD)",null],
+     ["Coupe-boulons",null],
+     ["Triangle de signalisation",null]
+    ]
+   }
+  ]
+ },
+ {
+  name:"Poste de conduite",
+  groups:[
+   {
+    name:"Portière conducteur",
+    items:[
+     ["Câle",null],
+     ["GHV équipier",null]
+    ]
+   },
+   {
+    name:"Siège conducteur",
+    items:[
+     ["En dessous : cric",null],
+     ["Derrière : coupe-ceinture + brise-vitre",null]
+    ]
+   },
+   {
+    name:"Entre siège conducteur - équipier",
+    items:[
+     ["Lampes",null]
+    ]
+   },
+   {
+    name:"Tableau de bord milieu",
+    items:[
+     ["Certificat accouchement",null],
+     ["Certificat enquête noyade",null],
+     ["Fiche SINUS",null],
+     ["Protocole SSSM + ISP",null],
+     ["Fiches traduction plastifiées (espagnol, néerlandais, allemand, anglais, italien)",null],
+     ["Fiches décharges",null],
+     ["Fiche réflexes détresses vitales (RCP, hémorragies, obstructions des voies aériennes)",null],
+     ["Plans (Arignac, Mercus, Quié, Purpan)",null],
+     ["Bloc fiches bilans",null]
+    ]
+   },
+   {
+    name:"Tableau de bord côté passager",
+    items:[
+     ["Boîtes de gants (S, M, L, XL)",4],
+     ["Boîte de masques à usage unique",null],
+     ["Tablette avec fiche bilan",null],
+     ["Au-dessus : GHV équipier",null]
+    ]
+   },
+   {
+    name:"Boîte à gants",
+    items:[
+     ["Pochette noire (manuel véhicule)",null],
+     ["Pochette bleue (carnet de bord carburant, carnet de bord autoroute, carnet d'entretien, contrôle technique)",null]
+    ]
+   },
+   {
+    name:"Portière passager",
+    items:[
+     ["GHV chef d'agrès",null]
+    ]
+   },
+   {
+    name:"Siège chef d'agrès",
+    items:[
+     ["En dessous : ampoules + chaînes",null],
+     ["Derrière : projecteur 12V",null]
+    ]
+   }
+  ]
+ }
+];
+
+const search=document.getElementById("search");
+const clear=document.getElementById("clear");
+const results=document.getElementById("results");
+const count=document.getElementById("count");
+
+function element(tag,className,text){
+ const node=document.createElement(tag);
+ if(className)node.className=className;
+ if(text!==undefined)node.textContent=text;
+ return node;
+}
+
+function normalize(text){
+ return String(text)
+  .normalize("NFD")
+  .replace(/[\u0300-\u036f]/g,"")
+  .toLowerCase();
+}
+
+function matches(text,query){
+ return normalize(text).includes(query);
+}
+
+function render(){
+ const query=normalize(search.value.trim());
+ results.replaceChildren();
+
+ let found=0;
+ let compartments=0;
+
+ inventory.forEach(compartment=>{
+  const section=element("section","compartment");
+  const heading=element("h2","",compartment.name);
+  let groupCount=0;
+
+  compartment.groups.forEach(group=>{
+   const rows=group.items.filter(([name])=>{
+    return !query ||
+     matches(name,query) ||
+     matches(group.name,query) ||
+     matches(compartment.name,query);
+   });
+
+   if(rows.length===0)return;
+
+   const groupBox=element(
+    "div",
+    "group "+(group.color||"")
+   );
+
+   groupBox.append(element("h3","",group.name));
+
+   rows.forEach(([name,quantity])=>{
+    const row=element("div","item");
+    row.append(element("span","name",name));
+
+    const qty=element(
+     "span",
+     quantity===null?"qty empty":"qty",
+     quantity===null?"":String(quantity)
+    );
+
+    if(quantity!==null){
+     qty.title="Quantité de référence";
+     qty.setAttribute(
+      "aria-label",
+      "Quantité de référence : "+quantity
+     );
+    }
+
+    row.append(qty);
+    groupBox.append(row);
+   });
+
+   section.append(groupBox);
+   groupCount+=rows.length;
+  });
+
+  if(groupCount>0){
+   section.prepend(heading);
+   results.append(section);
+   found+=groupCount;
+   compartments++;
+  }
+ });
+
+ count.textContent=query
+  ?found+" résultat(s) dans "+compartments+" compartiment(s)"
+  :found+" lignes de matériel";
+
+ if(found===0){
+  results.append(
+   element(
+    "div",
+    "empty-message",
+    "Aucun matériel trouvé. Essaie un autre mot."
+   )
+  );
+ }
+}
+
+search.addEventListener("input",render);
+clear.addEventListener("click",()=>{
+ search.value="";
+ render();
+ search.focus();
+});
+
+render();
+</script>
+</body>
+</html>
