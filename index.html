@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CS Tarascon-sur-Ariège</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      color: #202a35;
+    }
+    header {
+      background: #fff;
+      padding: 20px;
+      text-align: center;
+      border-bottom: 1px solid #e2e5e9;
+    }
+    header h1 { font-size: 22px; margin: 0; }
+    header p { color: #697586; margin-bottom: 0; }
+    main { max-width: 900px; margin: auto; padding: 20px; }
+    .welcome {
+      background: linear-gradient(135deg, #263c50, #526b80);
+      color: white;
+      padding: 35px 20px;
+      border-radius: 16px;
+      text-align: center;
+    }
+    .welcome h2 { margin-top: 0; }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 22px;
+    }
+    .card {
+      background: white;
+      border: 1px solid #e2e5e9;
+      border-radius: 12px;
+      padding: 24px 12px;
+      text-align: center;
+      font-weight: bold;
+    }
+    .card span { display: block; font-size: 30px; margin-bottom: 10px; }
+    .message {
+      margin-top: 22px;
+      padding: 20px;
+      background: white;
+      border-radius: 12px;
+    }
+    @media (max-width: 350px) {
+      .cards { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Centre de secours</h1>
+    <p>Tarascon-sur-Ariège</p>
+  </header>
+
+  <main>
+    <section class="welcome">
+      <h2>Bienvenue au centre !</h2>
+      <p>Votre espace de gestion et de vie du centre.</p>
+      <p>Les photos du centre apparaîtront ici.</p>
+    </section>
+
+    <section class="cards">
+      <div class="card"><span>🚒</span>Véhicules</div>
+      <div class="card"><span>📦</span>Réserves</div>
+      <div class="card"><span>⚠️</span>Anomalies</div>
+      <div class="card"><span>📅</span>Calendrier</div>
+      <div class="card"><span>🎓</span>Formation</div>
+      <div class="card"><span>⚙️</span>Administration</div>
+    </section>
+
+    <section class="message">
+      <h3>Le mot du chef de centre</h3>
+      <p>Le message du chef de centre sera affiché ici.</p>
+      <p>Lire la suite sera disponible prochainement.</p>
+    </section>
+  </main>
+</body>
+</html>
