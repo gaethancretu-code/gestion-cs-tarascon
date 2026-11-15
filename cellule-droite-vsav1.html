@@ -4,43 +4,134 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>VSAV 1 — Cellule côté droit (prototype)</title>
+<title>VSAV 1 — Cellule côté droit</title>
 <style>
-:root{font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#222;background:#f6f7fa}
+:root{
+  font-family:system-ui,-apple-system,Segoe UI,sans-serif;
+  color:#222;
+  background:#f6f7fa;
+}
 *{box-sizing:border-box}
 body{margin:0}
-header{background:linear-gradient(120deg,#a50913,#ed2227);color:white;padding:22px max(18px,calc((100vw - 900px)/2))}
+header{
+  background:linear-gradient(120deg,#a50913,#ed2227);
+  color:white;
+  padding:22px max(18px,calc((100vw - 900px)/2));
+}
 a{color:inherit}
 header a{font-size:14px}
 h1{margin:14px 0 4px;font-size:30px}
 main{max-width:900px;margin:auto;padding:20px 15px 70px}
-.notice{background:#fff4df;border:1px solid #f0cb8d;padding:14px;border-radius:12px;margin-bottom:18px}
-.bar{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin:16px 0}
-.card{background:white;border:1px solid #dddfe5;border-radius:14px;padding:16px;margin:12px 0;box-shadow:0 2px 7px #00000008}
+.notice{
+  background:#fff4df;
+  border:1px solid #f0cb8d;
+  padding:14px;
+  border-radius:12px;
+  margin-bottom:18px;
+}
+.bar{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:center;
+  flex-wrap:wrap;
+  margin:16px 0;
+}
+.card{
+  background:white;
+  border:1px solid #dddfe5;
+  border-radius:14px;
+  padding:16px;
+  margin:12px 0;
+  box-shadow:0 2px 7px #00000008;
+}
 .card h3{margin:0 0 8px;font-size:18px}
 .muted{color:#666;font-size:14px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
-.control{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:14px}
-input[type=number]{width:78px;padding:9px;border:1px solid #bbb;border-radius:8px;font-size:16px}
-input[type=checkbox]{width:20px;height:20px;accent-color:#bb141d}
-button{background:#b30e1a;color:white;border:0;border-radius:9px;padding:10px 13px;font-size:14px;cursor:pointer}
-button.secondary{background:#fff;color:#a30b16;border:1px solid #bb141d}
-button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #efa8aa}
-.alert{background:#fff0ec;border-left:4px solid #ba2020;border-radius:8px;padding:12px;margin-top:12px}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:12px;
+}
+.control{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:14px;
+}
+input[type=number]{
+  width:78px;
+  padding:9px;
+  border:1px solid #bbb;
+  border-radius:8px;
+  font-size:16px;
+}
+input[type=checkbox]{
+  width:20px;
+  height:20px;
+  accent-color:#bb141d;
+}
+button{
+  background:#b30e1a;
+  color:white;
+  border:0;
+  border-radius:9px;
+  padding:10px 13px;
+  font-size:14px;
+  cursor:pointer;
+}
+button.secondary{
+  background:#fff;
+  color:#a30b16;
+  border:1px solid #bb141d;
+}
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible{
+  outline:3px solid #efa8aa;
+}
+.alert{
+  background:#fff0ec;
+  border-left:4px solid #ba2020;
+  border-radius:8px;
+  padding:12px;
+  margin-top:12px;
+}
 .alert strong{color:#8c1010}
-.details{margin-top:10px;padding:12px;background:#f7f7f9;border-radius:9px}
-textarea{width:100%;min-height:75px;padding:10px;border:1px solid #bbb;border-radius:8px;font:inherit;margin:8px 0}
-small{display:block;color:#666;margin-top:6px}
-.tag{font-size:12px;background:#e9e9ee;border-radius:6px;padding:4px 8px}
+.details{
+  margin-top:10px;
+  padding:12px;
+  background:#f7f7f9;
+  border-radius:9px;
+}
+.details[hidden]{display:none}
+textarea{
+  width:100%;
+  min-height:75px;
+  padding:10px;
+  border:1px solid #bbb;
+  border-radius:8px;
+  font:inherit;
+  margin:8px 0;
+}
 .done{border-color:#73b58a}
-footer{text-align:center;color:#777;font-size:13px;margin-top:30px}
+footer{
+  text-align:center;
+  color:#777;
+  font-size:13px;
+  margin-top:30px;
+}
 </style>
 </head>
 <body>
 
 <header>
-<a href="verifications-vsav1.html">← Retour aux vérifications du VSAV 1</a>
-<div style="font-size:12px;letter-spacing:1px;margin-top:20px">CS TARASCON-SUR-ARIÈGE</div>
+<a href="verifications-vsav1.html">
+← Retour aux vérifications du VSAV 1
+</a>
+<div style="font-size:12px;letter-spacing:1px;margin-top:20px">
+CS TARASCON-SUR-ARIÈGE
+</div>
 <h1>🚑 Cellule côté droit</h1>
 <div>VSAV 1 · Inventaire interactif</div>
 </header>
@@ -55,15 +146,22 @@ Ne pas utiliser pour des vérifications opérationnelles.
 
 <div class="bar">
 <div>
-<strong id="progress">0 matériel vérifié</strong>
-<div class="muted">Les quantités non précisées dans les captures restent « à confirmer ».</div>
+<strong id="progress">0 / 4 matériels vérifiés</strong>
+<div class="muted">
+Pour les quantités connues, indique le nombre présent.
+Pour les autres équipements, coche simplement « Vérifié ».
 </div>
-<button class="secondary" id="reset">Réinitialiser le test</button>
+</div>
+<button class="secondary" id="reset">
+Réinitialiser le test
+</button>
 </div>
 
 <div id="items"></div>
 
-<footer>Prototype VSAV 1 — données de test locales uniquement</footer>
+<footer>
+Prototype VSAV 1 — données de test locales uniquement
+</footer>
 </main>
 
 <script>
@@ -84,102 +182,171 @@ let state={};
 
 try{
   state=JSON.parse(localStorage.getItem(key)||'{}');
-}catch{}
+  if(!state || typeof state!=='object' || Array.isArray(state)){
+    state={};
+  }
+}catch{
+  state={};
+}
 
-const save=()=>{
+function save(){
   try{
     localStorage.setItem(key,JSON.stringify(state));
   }catch{}
-};
+}
 
 const root=document.getElementById('items');
 
 function el(tag,cls,txt){
-  let x=document.createElement(tag);
+  const x=document.createElement(tag);
   if(cls)x.className=cls;
   if(txt!==undefined)x.textContent=txt;
   return x;
 }
 
+function verified(data,expected){
+  if(expected===null){
+    return data.checked===true;
+  }
+
+  const value=data.quantity;
+
+  return value!==undefined &&
+         value!==null &&
+         value!=='' &&
+         Number.isInteger(Number(value)) &&
+         Number(value)>=0;
+}
+
+function updateProgress(){
+  let total=0;
+  let checked=0;
+
+  groups.forEach((group,gi)=>{
+    group.items.forEach(([name,expected],ii)=>{
+      total++;
+      const id=gi+'-'+ii;
+
+      if(verified(state[id]||{},expected)){
+        checked++;
+      }
+    });
+  });
+
+  document.getElementById('progress').textContent=
+    checked+' / '+total+' matériels vérifiés';
+}
+
 function render(){
   root.replaceChildren();
-  let total=0,checked=0;
 
   groups.forEach((group,gi)=>{
     const section=el('section');
     section.append(el('h2','',group.name));
+
     const grid=el('div','grid');
 
     group.items.forEach(([name,expected],ii)=>{
-      total++;
       const id=gi+'-'+ii;
       const data=state[id]||{};
 
-      if(data.checked)checked++;
+      const card=el(
+        'article',
+        'card'+(verified(data,expected)?' done':'')
+      );
 
-      const card=el('article','card'+(data.checked?' done':''));
+      card.append(el('h3','',name));
 
       card.append(
-        el('h3','',name),
-        el('div','muted',
+        el(
+          'div',
+          'muted',
           expected===null
-          ?'Quantité de référence : à confirmer'
-          :'Quantité de référence : '+expected
+            ?'Quantité de référence : à confirmer'
+            :'Quantité de référence : '+expected
         )
       );
 
       const line=el('div','control');
-      const qlabel=el('label','','Présent : ');
-      const q=document.createElement('input');
 
-      q.type='number';
-      q.min='0';
-      q.inputMode='numeric';
-      q.placeholder='Qté';
-      q.value=data.quantity??'';
-      q.setAttribute('aria-label','Quantité présente pour '+name);
+      if(expected!==null){
+        const qlabel=el('label','','Présent : ');
 
-      q.addEventListener('input',()=>{
-        (state[id]??={}).quantity=q.value;
-        save();
-      });
+        const q=document.createElement('input');
+        q.type='number';
+        q.min='0';
+        q.step='1';
+        q.inputMode='numeric';
+        q.placeholder='Qté';
+        q.value=data.quantity??'';
+        q.setAttribute(
+          'aria-label',
+          'Quantité présente pour '+name
+        );
 
-      qlabel.append(q);
+        q.addEventListener('input',()=>{
+          (state[id]??={}).quantity=q.value;
+          save();
 
-      const c=document.createElement('input');
-      c.type='checkbox';
-      c.checked=!!data.checked;
-      c.id='check-'+id;
+          card.classList.toggle(
+            'done',
+            verified(state[id],expected)
+          );
 
-      c.addEventListener('change',()=>{
-        (state[id]??={}).checked=c.checked;
-        save();
-        render();
-      });
+          updateProgress();
+        });
 
-      const clabel=el('label','','Vérifié');
-      clabel.htmlFor=c.id;
+        qlabel.append(q);
+        line.append(qlabel);
 
-      line.append(qlabel,c,clabel);
+      }else{
+        const c=document.createElement('input');
+        c.type='checkbox';
+        c.checked=!!data.checked;
+        c.id='check-'+id;
+
+        c.addEventListener('change',()=>{
+          (state[id]??={}).checked=c.checked;
+          save();
+
+          card.classList.toggle('done',c.checked);
+          updateProgress();
+        });
+
+        const clabel=el('label','','Vérifié');
+        clabel.htmlFor=c.id;
+
+        line.append(c,clabel);
+      }
+
       card.append(line);
 
-      const active=(data.anomalies||[]).filter(a=>!a.resolved);
+      const active=(data.anomalies||[])
+        .filter(a=>!a.resolved);
 
       if(active.length){
         const a=el('div','alert');
 
         a.append(
-          el('strong','',active.length+' anomalie(s) déjà signalée(s) — test')
+          el(
+            'strong',
+            '',
+            active.length+' anomalie(s) déjà signalée(s) — test'
+          )
         );
 
-        active.forEach((an,idx)=>{
+        active.forEach(an=>{
           const p=el('p','',an.text);
           a.append(p);
 
-          const b=el('button','secondary','Marquer résolue (test)');
+          const b=el(
+            'button',
+            'secondary',
+            'Marquer résolue (test)'
+          );
 
           b.onclick=()=>{
-            state[id].anomalies.filter(x=>!x.resolved)[idx].resolved=true;
+            an.resolved=true;
             save();
             render();
           };
@@ -190,7 +357,12 @@ function render(){
         card.append(a);
       }
 
-      const toggle=el('button','secondary','⚠ Signaler une anomalie');
+      const toggle=el(
+        'button',
+        'secondary',
+        '⚠ Signaler une anomalie'
+      );
+
       toggle.style.marginTop='12px';
 
       const details=el('div','details');
@@ -198,9 +370,16 @@ function render(){
 
       const ta=document.createElement('textarea');
       ta.placeholder='Décris le problème constaté…';
-      ta.setAttribute('aria-label','Description anomalie pour '+name);
+      ta.setAttribute(
+        'aria-label',
+        'Description anomalie pour '+name
+      );
 
-      const submit=el('button','','Enregistrer l’anomalie (test)');
+      const submit=el(
+        'button',
+        '',
+        'Enregistrer l’anomalie (test)'
+      );
 
       submit.onclick=()=>{
         const val=ta.value.trim();
@@ -211,6 +390,7 @@ function render(){
         }
 
         (state[id]??={}).anomalies??=[];
+
         state[id].anomalies.push({
           text:val,
           resolved:false,
@@ -222,7 +402,11 @@ function render(){
       };
 
       details.append(
-        el('div','muted','Une nouvelle anomalie sera affichée sur ce matériel dans ce navigateur.'),
+        el(
+          'div',
+          'muted',
+          'Une nouvelle anomalie sera affichée sur ce matériel dans ce navigateur.'
+        ),
         ta,
         submit
       );
@@ -239,12 +423,13 @@ function render(){
     root.append(section);
   });
 
-  document.getElementById('progress').textContent=
-    checked+' / '+total+' matériels vérifiés';
+  updateProgress();
 }
 
 document.getElementById('reset').onclick=()=>{
-  if(confirm('Effacer les saisies et anomalies de TEST sur cet appareil ?')){
+  if(confirm(
+    'Effacer les saisies et anomalies de TEST sur cet appareil ?'
+  )){
     state={};
     save();
     render();
