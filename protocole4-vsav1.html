@@ -1,0 +1,323 @@
+
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Protocole 4 — VSAV 1</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f6f7fa;color:#222;font-family:system-ui,-apple-system,Segoe UI,sans-serif}
+header{background:linear-gradient(120deg,#a50913,#ed2227);color:white;padding:24px 18px 30px}
+.wrap{max-width:900px;margin:auto}
+.back{color:white;text-decoration:none;font-size:14px}
+h1{margin:18px 0 6px;font-size:29px}
+header p{margin:0;color:#ffe6e7}
+main{padding:22px 15px 65px}
+.notice{background:#fff4df;border:1px solid #f0cb8d;border-radius:12px;padding:14px;font-size:14px;line-height:1.5;margin-bottom:20px}
+.panel{background:white;border:1px solid #e0e2e8;border-radius:16px;padding:20px;margin-bottom:20px;box-shadow:0 2px 9px #00000008}
+.panel h2{margin:0 0 18px;font-size:21px}
+.last{background:#f2f5fa;border-radius:12px;padding:20px;text-align:center}
+.last-label{color:#626b77;font-size:14px;margin-bottom:9px}
+.last-date{font-size:29px;font-weight:750;color:#a50913}
+.last-team{font-size:14px;color:#59616c;margin-top:10px;overflow-wrap:anywhere}
+label{display:block;font-weight:650;font-size:14px;margin:17px 0 8px}
+input,textarea,select{width:100%;padding:12px;border:1px solid #c9cdd5;border-radius:9px;font:inherit;font-size:16px;background:white}
+textarea{min-height:90px;resize:vertical}
+input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-visible{outline:3px solid #efa8aa}
+.hint{font-size:13px;color:#6b7280;margin:6px 0 0}
+button{border:0;background:#b30e1a;color:white;border-radius:10px;padding:13px 17px;font:inherit;font-weight:650;cursor:pointer}
+button.secondary{background:white;color:#a50913;border:1px solid #b30e1a;padding:8px 12px;font-size:14px}
+.submit{width:100%;margin-top:20px}
+.record{padding:16px 0;border-bottom:1px solid #e7e9ee}
+.record:last-child{border-bottom:0}
+.record-top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.record-date{font-weight:750;font-size:17px}
+.record-team{margin-top:8px;font-size:14px;overflow-wrap:anywhere}
+.record-notes{margin-top:9px;padding:11px;background:#f5f6f9;border-radius:9px;font-size:14px;white-space:pre-wrap;overflow-wrap:anywhere}
+.empty{color:#69717d;text-align:center;padding:22px 0}
+.anomaly-panel{border-top:5px solid #d27a1b}
+.anomaly-note{font-size:14px;color:#626b77;line-height:1.5}
+.success{background:#e9f7ee;color:#176239;border-radius:9px;padding:12px;margin-top:14px}
+footer{text-align:center;color:#777;font-size:13px;margin-top:35px}
+</style>
+</head>
+<body>
+
+<header>
+<div class="wrap">
+<a class="back" href="vsav1.html">← Retour au VSAV 1</a>
+<h1>🧼 Protocole 4</h1>
+<p>VSAV 1 · Suivi des désinfections</p>
+</div>
+</header>
+
+<main class="wrap">
+
+<div class="notice">
+<strong>Prototype de démonstration.</strong>
+Les informations sont enregistrées uniquement sur cet appareil et dans ce navigateur.
+Aucune synchronisation, authentification ou sauvegarde serveur.
+Ne pas utiliser comme registre opérationnel.
+</div>
+
+<section class="panel">
+<h2>Dernier protocole 4</h2>
+<div class="last">
+<div class="last-label">Date de la dernière réalisation</div>
+<div class="last-date" id="lastDate">Aucun protocole enregistré</div>
+<div class="last-team" id="lastTeam"></div>
+</div>
+</section>
+
+<section class="panel">
+<h2>Enregistrer un protocole 4</h2>
+<form id="protocolForm">
+
+<label for="protocolDate">Date de réalisation *</label>
+<input type="date" id="protocolDate" required>
+
+<label for="protocolTeam">Équipe *</label>
+<textarea id="protocolTeam" placeholder="Ex. : Dupont, Martin, Durand" required></textarea>
+<p class="hint">Indique les pompiers ayant participé à la désinfection.</p>
+
+<label for="protocolNotes">Observations (facultatif)</label>
+<textarea id="protocolNotes" placeholder="Remarques éventuelles…"></textarea>
+
+<button type="submit" class="submit">Enregistrer le protocole 4</button>
+</form>
+</section>
+
+<section class="panel anomaly-panel">
+<h2>⚠️ Signaler une anomalie</h2>
+<p class="anomaly-note">
+Un problème constaté pendant le protocole 4 peut être signalé ici,
+sans effectuer une vérification complète du véhicule.
+</p>
+
+<form id="anomalyForm">
+
+<label for="anomalyLocation">Emplacement concerné *</label>
+<select id="anomalyLocation" required>
+<option value="">Sélectionner un emplacement</option>
+<option>Cellule côté gauche</option>
+<option>Cellule côté droit</option>
+<option>Cellule au fond</option>
+<option>Sac d'oxygénothérapie</option>
+<option>Sac prompt-secours</option>
+<option>Matériel extérieur et balisage</option>
+<option>Poste de conduite</option>
+<option>Véhicule — problème général</option>
+</select>
+
+<label for="anomalyMaterial">Matériel concerné (facultatif)</label>
+<input type="text" id="anomalyMaterial" placeholder="Ex. : Aspirateur de mucosités">
+
+<label for="anomalyDescription">Description de l'anomalie *</label>
+<textarea id="anomalyDescription" placeholder="Décris précisément le problème constaté…" required></textarea>
+
+<label for="anomalyTeam">Équipe ayant constaté l'anomalie (facultatif)</label>
+<textarea id="anomalyTeam" placeholder="Ex. : Dupont, Martin"></textarea>
+
+<button type="submit" class="submit">Enregistrer l'anomalie</button>
+</form>
+
+<div id="anomalyMessage" role="status"></div>
+</section>
+
+<section class="panel">
+<h2>Historique des protocoles 4</h2>
+<div id="history"></div>
+</section>
+
+<footer>CS Tarascon-sur-Ariège — Prototype VSAV 1</footer>
+</main>
+
+<script>
+const PROTOCOL_KEY="cs-tarascon-vsav1-protocole4-prototype-v1";
+const ANOMALY_KEY="cs-tarascon-vsav1-anomalies-directes-prototype-v1";
+
+function readArray(key){
+ try{
+  const value=JSON.parse(localStorage.getItem(key)||"[]");
+  return Array.isArray(value)?value:[];
+ }catch{
+  return [];
+ }
+}
+
+let records=readArray(PROTOCOL_KEY);
+let anomalies=readArray(ANOMALY_KEY);
+
+function saveArray(key,data){
+ try{
+  localStorage.setItem(key,JSON.stringify(data));
+  return true;
+ }catch{
+  alert("Impossible d'enregistrer les données dans ce navigateur.");
+  return false;
+ }
+}
+
+function makeId(){
+ if(window.crypto && crypto.randomUUID){
+  return crypto.randomUUID();
+ }
+ return Date.now().toString(36)+"-"+Math.random().toString(36).slice(2);
+}
+
+function formatDate(value){
+ const parts=String(value).split("-");
+ return parts.length===3
+  ?parts[2]+"/"+parts[1]+"/"+parts[0]
+  :value;
+}
+
+function validPastDate(value){
+ if(!/^\d{4}-\d{2}-\d{2}$/.test(value))return false;
+ const selected=new Date(value+"T12:00:00");
+ return !Number.isNaN(selected.getTime()) &&
+  selected.toISOString().slice(0,10)===value &&
+  selected.getTime()<=Date.now();
+}
+
+function node(tag,cls,text){
+ const el=document.createElement(tag);
+ if(cls)el.className=cls;
+ if(text!==undefined)el.textContent=text;
+ return el;
+}
+
+function renderProtocols(){
+ const sorted=[...records]
+  .filter(r=>r && typeof r.date==="string" && typeof r.team==="string")
+  .sort((a,b)=>
+   b.date.localeCompare(a.date) ||
+   String(b.createdAt||"").localeCompare(String(a.createdAt||""))
+  );
+
+ const history=document.getElementById("history");
+ const lastDate=document.getElementById("lastDate");
+ const lastTeam=document.getElementById("lastTeam");
+ history.replaceChildren();
+
+ if(!sorted.length){
+  lastDate.textContent="Aucun protocole enregistré";
+  lastTeam.textContent="";
+  history.append(node("div","empty","Aucun protocole 4 enregistré pour le moment."));
+  return;
+ }
+
+ lastDate.textContent=formatDate(sorted[0].date);
+ lastTeam.textContent="Équipe : "+sorted[0].team;
+
+ sorted.forEach(record=>{
+  const item=node("article","record");
+  const top=node("div","record-top");
+  top.append(node("div","record-date",formatDate(record.date)));
+
+  const remove=node("button","secondary","Supprimer");
+  remove.type="button";
+  remove.addEventListener("click",()=>{
+   if(!confirm("Supprimer cet enregistrement de test ?"))return;
+
+   const previous=records;
+   records=records.filter(r=>r.id!==record.id);
+
+   if(saveArray(PROTOCOL_KEY,records)){
+    renderProtocols();
+   }else{
+    records=previous;
+   }
+  });
+
+  top.append(remove);
+  item.append(top);
+  item.append(node("div","record-team","Équipe : "+record.team));
+
+  if(record.notes && record.notes.trim()){
+   item.append(node("div","record-notes",record.notes));
+  }
+
+  history.append(item);
+ });
+}
+
+document.getElementById("protocolForm").addEventListener("submit",event=>{
+ event.preventDefault();
+
+ const date=document.getElementById("protocolDate").value;
+ const team=document.getElementById("protocolTeam").value.trim();
+ const notes=document.getElementById("protocolNotes").value.trim();
+
+ if(!validPastDate(date)){
+  alert("Indique une date de réalisation valide, non future.");
+  return;
+ }
+ if(!team){
+  alert("Renseigne l'équipe ayant réalisé le protocole.");
+  return;
+ }
+
+ const record={
+  id:makeId(),
+  date,team,notes,
+  createdAt:new Date().toISOString()
+ };
+
+ const updated=[...records,record];
+ if(!saveArray(PROTOCOL_KEY,updated))return;
+
+ records=updated;
+ event.target.reset();
+ renderProtocols();
+ alert("Protocole 4 enregistré dans ce navigateur (test).");
+});
+
+document.getElementById("anomalyForm").addEventListener("submit",event=>{
+ event.preventDefault();
+
+ const location=document.getElementById("anomalyLocation").value;
+ const material=document.getElementById("anomalyMaterial").value.trim();
+ const description=document.getElementById("anomalyDescription").value.trim();
+ const team=document.getElementById("anomalyTeam").value.trim();
+
+ if(!location || !description){
+  alert("Renseigne l'emplacement et la description du problème.");
+  return;
+ }
+
+ const anomaly={
+  id:makeId(),
+  vehicle:"VSAV 1",
+  source:"Protocole 4",
+  location,
+  material,
+  description,
+  team,
+  createdAt:new Date().toISOString(),
+  resolved:false,
+  resolvedAt:null
+ };
+
+ const updated=[...anomalies,anomaly];
+ if(!saveArray(ANOMALY_KEY,updated))return;
+
+ anomalies=updated;
+ event.target.reset();
+
+ const message=document.getElementById("anomalyMessage");
+ message.replaceChildren();
+ message.append(
+  node(
+   "div",
+   "success",
+   "Anomalie enregistrée dans ce navigateur (test). Elle sera visible dans la future rubrique Anomalies du VSAV 1."
+  )
+ );
+});
+
+renderProtocols();
+</script>
+</body>
+</html>
