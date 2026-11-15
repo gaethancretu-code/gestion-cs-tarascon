@@ -28,12 +28,11 @@
 <script>
 const modal=document.getElementById('modal');const close=document.getElementById('close');document.querySelectorAll('.tile').forEach(btn=>btn.addEventListener('click',()=>{document.getElementById('modal-title').textContent=btn.dataset.name;modal.classList.add('open');close.focus()}));function dismiss(){modal.classList.remove('open')}close.addEventListener('click',dismiss);modal.addEventListener('click',e=>{if(e.target===modal)dismiss()});document.addEventListener('keydown',e=>{if(e.key==='Escape')dismiss()});
 </script>
-  
 <script>
-document.querySelector('[data-name="Véhicules"]').addEventListener('click', function(event) {
-  event.stopImmediatePropagation();
-  window.location.href = 'vehicules.html';
-}, true);
+document.querySelector('[data-name="Véhicules"]')
+  .addEventListener('click', function(event) {
+    event.stopImmediatePropagation();
+    window.location.href = 'vehicules.html';
+  }, true);
 </script>
-
 </body></html>
