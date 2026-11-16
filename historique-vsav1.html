@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VSAV 1 — Historique</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f6f7fa;color:#222;font-family:system-ui,-apple-system,Segoe UI,sans-serif}header{background:linear-gradient(120deg,#a50913,#ed2227);color:white;padding:24px 18px 30px}.wrap{max-width:950px;margin:auto}.back{color:white;text-decoration:none;font-size:14px}h1{margin:18px 0 6px;font-size:30px}header p{margin:0;color:#ffe6e7}main{padding:22px 15px 65px}.notice{background:#fff4df;border:1px solid #f0cb8d;border-radius:12px;padding:14px;font-size:14px;line-height:1.5;margin-bottom:18px}.panel{background:white;border:1px solid #e0e2e8;border-radius:16px;padding:18px;margin-bottom:18px;box-shadow:0 2px 9px #00000008}.panel h2{margin:0 0 14px;font-size:21px}.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:10px;margin-bottom:18px}.stat{background:white;border:1px solid #e0e2e8;border-radius:13px;padding:15px}.stat strong{display:block;font-size:27px;color:#a50913}.stat span{font-size:13px;color:#626b77}.filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}label{display:block;font-size:13px;font-weight:650;margin-bottom:6px}input,select{width:100%;padding:11px;border:1px solid #c9cdd5;border-radius:9px;font:inherit;font-size:16px;background:white}input:focus-visible,select:focus-visible,button:focus-visible{outline:3px solid #efa8aa}.entry{border-left:4px solid #9ca3af;padding:14px 15px;margin:13px 0;background:#fafbfc;border-radius:0 11px 11px 0;overflow-wrap:anywhere}.entry.protocol{border-color:#3478c5}.entry.anomaly{border-color:#c42b31}.entry.resolved{border-color:#328a58}.entry-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap}.entry h3{font-size:17px;margin:0}.badge{font-size:12px;border-radius:100px;padding:5px 9px;background:#e8e9ee;color:#424750;white-space:nowrap}.badge.open{background:#ffe4e4;color:#a50913}.badge.closed{background:#e5f5ea;color:#176239}.badge.protocol{background:#e5f0ff;color:#225aa0}.meta{font-size:13px;color:#606b78;margin-top:7px}.description{white-space:pre-wrap;margin-top:11px;line-height:1.5}.notes{background:#f0f2f6;border-radius:9px;padding:10px;margin-top:9px;white-space:pre-wrap;font-size:14px}.empty{text-align:center;color:#69717d;padding:25px 5px}.warning{color:#9a4a10;font-size:13px;margin-top:12px}footer{text-align:center;color:#777;font-size:13px;margin-top:30px}button{background:#b30e1a;color:white;border:0;border-radius:9px;padding:10px 14px;cursor:pointer;font:inherit}.toolbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:10px}.toolbar h2{margin:0}
+</style>
+</head>
+<body>
+<header><div class="wrap"><a class="back" href="vsav1.html">← Retour au VSAV 1</a><h1>📋 Historique</h1><p>VSAV 1 · Journal des événements enregistrés</p></div></header>
+<main class="wrap">
+<div class="notice"><strong>Prototype de démonstration.</strong> Historique consultatif, enregistré uniquement sur cet appareil et dans ce navigateur. Aucune synchronisation, authentification ou sauvegarde serveur. Ne pas utiliser comme registre opérationnel. Les vérifications ne figurent pas encore dans ce journal car leur réalisation n'est pas horodatée.</div>
+<div class="stats"><div class="stat"><strong id="countAll">0</strong><span>Événements</span></div><div class="stat"><strong id="countProtocols">0</strong><span>Protocoles 4</span></div><div class="stat"><strong id="countOpen">0</strong><span>Anomalies en cours</span></div><div class="stat"><strong id="countResolved">0</strong><span>Anomalies résolues</span></div></div>
+<section class="panel"><h2>Rechercher dans l'historique</h2><div class="filters"><div><label for="search">Recherche</label><input id="search" type="search" placeholder="Matériel, équipe, description…"></div><div><label for="type">Type d'événement</label><select id="type"><option value="all">Tous les événements</option><option value="protocol">Protocoles 4</option><option value="anomaly">Toutes les anomalies</option><option value="open">Anomalies en cours</option><option value="resolved">Anomalies résolues</option></select></div><div><label for="location">Emplacement</label><select id="location"><option value="all">Tous les emplacements</option></select></div></div></section>
+<section class="panel"><div class="toolbar"><h2>Journal chronologique</h2><button type="button" id="refresh">Actualiser</button></div><div class="meta" id="resultCount"></div><div id="history" aria-live="polite"></div><div id="storageWarning" class="warning" role="status"></div></section>
+<footer>CS Tarascon-sur-Ariège — Prototype VSAV 1</footer>
+</main>
+<script>
+"use strict";
+const base="cs-tarascon-vsav1-";
+const sources=[
+{key:base+"gauche-prototype-v1",name:"Cellule côté gauche",groups:[
+["0","Rangements supérieurs",["2 blocs maintien tête","Sangles araignées","Sangles brancard cuillère","Kit accouchements inopinés","Kit AEV","Kit Réanimation Néonatale"]],
+["1","Autres équipements de la cellule côté gauche",["Pompe","Matelas Immobilisateur à Dépression","Bouteille à oxygène de réserve (B5)","Aspirateur de mucosités","Attelle Cervico Thoracique","Tablette pour le brancard","Schiller","Bouteille à oxygène (B15)"]]]},
+{key:base+"droite-prototype-v1",name:"Cellule côté droit",groups:[
+["0","Rangements supérieurs",["Ballot d'essuie-tout plié","Spray moussant désinfectant","Couvertures de survie","Draps"]]]},
+{key:base+"fond-prototype-v1",name:"Cellule au fond",groups:[
+["general","Matériel général de la cellule au fond",["Sac d'attelles (1 grande, 1 moyenne, 1 petite)","Colliers cervicaux (1 adulte, 1 enfant)","Boîtes de gants (1 S, 1 M, 1 L)","Kit membres sectionnés","Brancard cuillère","Chaise de transport"]],
+["gauche-haut","Tiroir gauche haut",["Kit risque infectieux (ancien kit COVID)","Kit risque infectieux"]],
+["gauche-bas","Tiroir gauche bas",["Brancard souple"]],
+["rouge","Tiroir rouge",["Filets","Bandes 4x10","Bandes 4x5","Compresses stériles","Sparadraps","Paire de ciseaux de Jesco","Pansement compressif d'urgence","Pansements américains 10x20","Pansements américains 20x25","Poches de froid","Gel hydro-alcoolique","Écharpes triangulaires",'"Dakin"',"Petites doses de sérum physiologique","Grandes doses de sérum physiologique"]],
+["bleu","Tiroir bleu",["BAVU adulte","Filtre BAVU","Masques haute concentration","Lunettes à oxygène","Canules de Guédel (T2, T3, T4)","Cathéter d'aspiration"]],
+["noir","Tiroir noir",["BAVU pédiatrique","Filtre BAVU","Masques haute concentration pédiatriques","Lunettes haute concentration","Canules de Guédel (T0, T1)"]],
+["vert","Tiroir vert",["VOMIX","Cathéter d'aspiration","Raccords universels","Tubulure d'aspiration","Sac de rechange pour aspirateur de mucosités","Aspirateur de mucosités manuel","Champs stériles"]],
+["jaune","Tiroir jaune",["Peluche POMPI","Câbles ECG","Paires de lunettes de protection","Haricots jetables","Boîte OPCT","Sacs DASRI","Sacs DAOM"]]]},
+{key:base+"oxygenotherapie-prototype-v1",name:"Sac d'oxygénothérapie",groups:[
+["poche-gauche","Poche gauche — Oxygénothérapie enfant",["BAVU","Masques haute concentration","Lunettes à oxygène","Raccord universel","Cathéter d'aspiration","Canules de Guédel (T0, T1)"]],
+["poche-droite","Poche droite — Oxygénothérapie adulte",["BAVU","Masques haute concentration","Lunettes à oxygène","Raccord universel","Cathéter d'aspiration","Canules de Guédel (T2, T3, T4)"]],
+["poche-milieu","Poche du milieu",["Sac DASRI","Sac DAOM"]],
+["interieur","Intérieur du sac",["Couvertures de survie","Colliers cervicaux adultes","Colliers cervicaux pédiatriques","Bouteille d'oxygène B5"]]]},
+{key:base+"prompt-secours-prototype-v1",name:"Sac prompt-secours",groups:[
+["milieu-haut","Poche milieu haut",["Kit damage control"]],
+["milieu-bas","Poche milieu bas",["Kit brûlures"]],
+["cote-droit","Poche côté droit",["Couvertures de survie","Gants en taille L (quelques)"]],
+["noire","Pochette noire",["Couverture de survie","Pansements américains 10x20","Pansements américains 20x25","Pansement compressif d'urgence"]],
+["bleue","Grande pochette bleue",["Compresses stériles","Ciseaux de Jesco","Petites doses de sérum physiologique","Grandes doses de sérum physiologique","Paire de gants","Bandes 4x10","Bandes 4x5","Sachet de filets","Sparadraps","Poche de froid"]],
+["rouge","Pochette rouge",["Lunettes de protection"]],
+["jaune","Pochette jaune",["Sac DAOM","Sac DASRI","Paire de gants en latex","VOMIX","Écharpes triangulaires"]],
+["violette","Pochette violette",["Appareil pour prise de tension manuelle","Stéthoscope","Brassard enfant","Brassards adultes"]]]},
+{key:base+"exterieur-prototype-v1",name:"Matériel extérieur et balisage",groups:[
+["exterieur","Matériel extérieur et balisage",["Cônes de Lubeck","Extincteur","Commande","Mallette contenant 2 protections airbag (1 VL, 1 PL)","Outils de forcement (OFD)","Coupe-boulons","Triangle de signalisation"]]]},
+{key:base+"poste-conduite-prototype-v1",name:"Poste de conduite",groups:[
+["portiere-conducteur","Portière conducteur",["Câle","GHV équipier"]],
+["siege-conducteur","Siège conducteur",["En dessous : cric","Derrière : coupe-ceinture + brise-vitre"]],
+["entre-sieges","Entre siège conducteur - équipier",["Lampes"]],
+["tableau-milieu","Tableau de bord milieu",["Certificat accouchement","Certificat enquête noyade","Fiche SINUS","Protocole SSSM + ISP","Fiches traduction plastifiées (espagnol, néerlandais, allemand, anglais, italien)","Fiches décharges","Fiche réflexes détresses vitales (RCP, hémorragies, obstructions des voies aériennes)","Plans (Arignac, Mercus, Quié, Purpan)","Bloc fiches bilans"]],
+["tableau-passager","Tableau de bord côté passager",["Boîtes de gants (S, M, L, XL)","Boîte de masques à usage unique","Tablette avec fiche bilan","Au-dessus : GHV équipier"]],
+["boite-gants","Boîte à gants",["Pochette noire (manuel véhicule)","Pochette bleue (carnet de bord carburant, carnet de bord autoroute, carnet d'entretien, contrôle technique)"]],
+["portiere-passager","Portière passager",["GHV chef d'agrès"]],
+["siege-chef","Siège chef d'agrès",["En dessous : ampoules + chaînes","Derrière : projecteur 12V"]]]}
+];
+const protocolKey=base+"protocole4-prototype-v1";
+const directKey=base+"anomalies-directes-prototype-v1";
+function read(key){const raw=localStorage.getItem(key);if(raw===null)return null;return JSON.parse(raw)}
+function lookup(source,id){for(const [prefix,groupName,names] of source.groups){const start=prefix+"-";if(id.startsWith(start)){const suffix=id.slice(start.length);if(/^\d+$/.test(suffix)&&Number(suffix)<names.length)return {material:names[Number(suffix)],area:groupName}}}return {material:"Matériel non identifié ("+id+")",area:"Emplacement non identifié"}}
+function stamp(value){const ms=Date.parse(value||"");return Number.isFinite(ms)?ms:null}
+function dateTime(value){const ms=stamp(value);return ms===null?"Date non enregistrée":new Intl.DateTimeFormat("fr-FR",{dateStyle:"medium",timeStyle:"short"}).format(ms)}
+function dateOnly(value){if(!/^\d{4}-\d{2}-\d{2}$/.test(value||""))return "Date non enregistrée";const [y,m,d]=value.split("-").map(Number);const date=new Date(y,m-1,d);return date.getFullYear()===y&&date.getMonth()===m-1&&date.getDate()===d?new Intl.DateTimeFormat("fr-FR",{dateStyle:"long"}).format(date):"Date non enregistrée"}
+function make(tag,cls,content){const node=document.createElement(tag);if(cls)node.className=cls;if(content!==undefined)node.textContent=content;return node}
+let events=[];
+function load(){const output=[];const errors=[];
+for(const source of sources){try{const data=read(source.key);if(!data||typeof data!=="object"||Array.isArray(data))continue;for(const [id,item] of Object.entries(data)){if(!item||!Array.isArray(item.anomalies))continue;const info=lookup(source,id);item.anomalies.forEach(an=>{if(!an||typeof an!=="object")return;output.push({type:"anomaly",resolved:an.resolved===true,location:source.name,area:info.area,material:info.material,description:String(an.text||""),team:"",origin:"Vérifications",createdAt:an.at||"",resolvedAt:an.resolvedAt||""})})}}catch(e){errors.push("Lecture impossible : "+source.name)}}
+try{const data=read(directKey);if(Array.isArray(data)){data.forEach(an=>{if(!an||typeof an!=="object")return;output.push({type:"anomaly",resolved:an.resolved===true,location:String(an.location||"Véhicule — problème général"),area:"",material:String(an.material||""),description:String(an.description||""),team:String(an.team||""),origin:"Protocole 4",createdAt:an.createdAt||"",resolvedAt:an.resolvedAt||""})})}}catch(e){errors.push("Lecture impossible : anomalies du Protocole 4")}
+try{const data=read(protocolKey);if(Array.isArray(data)){data.forEach(record=>{if(!record||typeof record!=="object"||typeof record.date!=="string"||typeof record.team!=="string")return;output.push({type:"protocol",location:"",date:record.date,team:record.team,notes:String(record.notes||""),createdAt:record.createdAt||""})})}}catch(e){errors.push("Lecture impossible : protocoles 4")}
+output.sort((a,b)=>{const aa=a.type==="protocol"?stamp(a.date+"T12:00:00"):stamp(a.createdAt);const bb=b.type==="protocol"?stamp(b.date+"T12:00:00"):stamp(b.createdAt);return (bb??-Infinity)-(aa??-Infinity)});events=output;document.getElementById("storageWarning").textContent=errors.join(" · ");populateLocations();render()}
+function populateLocations(){const select=document.getElementById("location");const old=select.value;select.replaceChildren(make("option","","Tous les emplacements"));select.firstChild.value="all";const locations=[...new Set(events.filter(e=>e.type==="anomaly").map(e=>e.location))].sort((a,b)=>a.localeCompare(b,"fr"));locations.forEach(name=>{const opt=make("option","",name);opt.value=name;select.append(opt)});select.value=locations.includes(old)?old:"all"}
+function render(){const protocols=events.filter(e=>e.type==="protocol").length;const anomalies=events.filter(e=>e.type==="anomaly");document.getElementById("countAll").textContent=events.length;document.getElementById("countProtocols").textContent=protocols;document.getElementById("countOpen").textContent=anomalies.filter(e=>!e.resolved).length;document.getElementById("countResolved").textContent=anomalies.filter(e=>e.resolved).length;
+const type=document.getElementById("type").value;const location=document.getElementById("location").value;const query=document.getElementById("search").value.trim().toLocaleLowerCase("fr");const filtered=events.filter(e=>{if(type==="protocol"&&e.type!=="protocol")return false;if(type==="anomaly"&&e.type!=="anomaly")return false;if(type==="open"&&(e.type!=="anomaly"||e.resolved))return false;if(type==="resolved"&&(e.type!=="anomaly"||!e.resolved))return false;if(location!=="all"&&e.location!==location)return false;return !query||Object.values(e).join(" ").toLocaleLowerCase("fr").includes(query)});
+document.getElementById("resultCount").textContent=filtered.length+" événement(s) affiché(s)";const root=document.getElementById("history");root.replaceChildren();if(!filtered.length){root.append(make("div","empty",events.length?"Aucun événement ne correspond aux filtres.":"Aucun événement enregistré dans ce navigateur pour le moment."));return}
+filtered.forEach(e=>{const article=make("article","entry "+(e.type==="protocol"?"protocol":e.resolved?"resolved":"anomaly"));const head=make("div","entry-head");const title=e.type==="protocol"?"Protocole 4 réalisé":e.material||"Anomalie signalée";head.append(make("h3","",title));head.append(make("span","badge "+(e.type==="protocol"?"protocol":e.resolved?"closed":"open"),e.type==="protocol"?"Protocole 4":e.resolved?"Résolue":"En cours"));article.append(head);
+if(e.type==="protocol"){article.append(make("div","meta","Date de réalisation : "+dateOnly(e.date)));article.append(make("div","meta","Équipe : "+e.team));if(e.notes.trim())article.append(make("div","notes","Observations : "+e.notes));if(e.createdAt)article.append(make("div","meta","Enregistré le : "+dateTime(e.createdAt)))}else{article.append(make("div","meta",e.location+(e.area&&e.area!==e.location?" · "+e.area:"")));article.append(make("div","meta","Origine : "+e.origin+" · Signalée le : "+dateTime(e.createdAt)));if(e.team)article.append(make("div","meta","Équipe : "+e.team));if(e.description)article.append(make("div","description",e.description));if(e.resolved)article.append(make("div","meta",e.resolvedAt?"Résolue le : "+dateTime(e.resolvedAt):"Résolue — date de résolution non enregistrée"))}root.append(article)})}
+for(const id of ["search","type","location"]){document.getElementById(id).addEventListener(id==="search"?"input":"change",render)}document.getElementById("refresh").addEventListener("click",load);window.addEventListener("pageshow",load);window.addEventListener("storage",load);load();
+</script>
+</body>
+</html>
