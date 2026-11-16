@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VSAV 1 — Anomalies</title>
+<style>
+:root{font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#222;background:#f6f7fa}*{box-sizing:border-box}body{margin:0}header{background:linear-gradient(120deg,#a50913,#ed2227);color:white;padding:24px max(18px,calc((100vw - 900px)/2))}header a{color:white;font-size:14px;text-decoration:none}h1{margin:16px 0 5px;font-size:30px}main{max-width:900px;margin:auto;padding:20px 15px 70px}.notice{background:#fff4df;border:1px solid #f0cb8d;padding:14px;border-radius:12px;font-size:14px;line-height:1.5;margin-bottom:18px}.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:18px 0}.stat{background:white;border:1px solid #dddfe5;border-radius:12px;padding:14px;text-align:center}.stat strong{display:block;font-size:27px}.stat span{font-size:13px;color:#666}.tools{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}.tools input,.tools select{font:inherit;border:1px solid #bbb;border-radius:9px;padding:11px;min-width:0}.tools input{flex:2 1 220px}.tools select{flex:1 1 170px}.card{background:white;border:1px solid #dddfe5;border-radius:14px;padding:17px;margin:13px 0;box-shadow:0 2px 7px #00000008}.card h3{margin:0 0 8px;font-size:19px}.muted{font-size:14px;color:#666;line-height:1.5}.description{white-space:pre-wrap;overflow-wrap:anywhere;margin:12px 0}.status{display:inline-block;font-size:12px;font-weight:700;border-radius:99px;padding:5px 9px;margin-bottom:8px;background:#ffe7e5;color:#a20e19}.status.ok{background:#e4f4e9;color:#1e7040}button{background:#b30e1a;color:white;border:0;border-radius:9px;padding:10px 13px;font-size:14px;cursor:pointer}button.secondary{background:white;color:#a30b16;border:1px solid #bb141d}button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #efa8aa}.empty{padding:28px 15px;text-align:center;color:#666;background:white;border:1px dashed #bbb;border-radius:12px}details{margin-top:24px;background:white;border:1px solid #dddfe5;border-radius:12px;padding:15px}summary{cursor:pointer;font-weight:700}table{width:100%;border-collapse:collapse;font-size:13px;margin-top:12px}td,th{padding:9px 6px;border-bottom:1px solid #e6e6e6;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{color:#555}.error{color:#a20e19}.good{color:#1e7040}footer{text-align:center;color:#777;font-size:13px;margin-top:30px}@media(max-width:480px){.stats{gap:6px}.stat{padding:10px 5px}.stat strong{font-size:23px}.stat span{font-size:12px}}
+</style>
+</head>
+<body>
+<header>
+<a href="vsav1.html">← Retour au VSAV 1</a>
+<div style="font-size:12px;letter-spacing:1px;margin-top:20px">CS TARASCON-SUR-ARIÈGE</div>
+<h1>⚠ Anomalies</h1>
+<div>VSAV 1 · Suivi des signalements</div>
+</header>
+<main>
+<div class="notice"><strong>Prototype de démonstration.</strong> Les anomalies sont enregistrées uniquement dans ce navigateur, sur cet appareil et pour cette adresse du site. Aucune synchronisation ni sauvegarde serveur. Ne pas utiliser pour un suivi opérationnel.</div>
+<div class="stats"><div class="stat"><strong id="total">0</strong><span>Total</span></div><div class="stat"><strong id="active">0</strong><span>En cours</span></div><div class="stat"><strong id="resolved">0</strong><span>Résolues</span></div></div>
+<div class="tools"><input id="search" type="search" placeholder="Rechercher matériel, lieu, description…" aria-label="Rechercher une anomalie"><select id="statusFilter" aria-label="Filtrer par état"><option value="active">En cours</option><option value="all">Toutes</option><option value="resolved">Résolues</option></select><select id="sourceFilter" aria-label="Filtrer par emplacement"><option value="all">Tous les emplacements</option></select><button class="secondary" id="refresh" type="button">Actualiser</button></div>
+<div id="list" aria-live="polite"></div>
+<details id="diagnostic"><summary>Diagnostic des données locales</summary><p class="muted">Ce tableau indique combien d'anomalies sont lisibles dans ce navigateur pour chaque source. Si une vérification affiche une anomalie mais que son compteur est à zéro ici, vérifie que les deux pages utilisent la même adresse et le même contexte de navigation (Safari, onglet privé ou application ajoutée à l'écran d'accueil).</p><div id="diagTable"></div><p class="muted" id="origin"></p></details>
+<footer>Prototype VSAV 1 — données locales de test</footer>
+</main>
+<script>
+'use strict';
+// Les identifiants et intitulés proviennent des sept pages de vérification.
+const sources=[
+ {key:'cs-tarascon-vsav1-gauche-prototype-v1',label:'Cellule côté gauche',groups:[
+  {id:'0',name:'Rangements supérieurs',items:['2 blocs maintien tête','Sangles araignées','Sangles brancard cuillère','Kit accouchements inopinés','Kit AEV','Kit Réanimation Néonatale']},
+  {id:'1',name:'Autres équipements de la cellule côté gauche',items:['Pompe','Matelas Immobilisateur à Dépression','Bouteille à oxygène de réserve (B5)','Aspirateur de mucosités','Attelle Cervico Thoracique','Tablette pour le brancard','Schiller','Bouteille à oxygène (B15)']}
+ ]},
+ {key:'cs-tarascon-vsav1-droite-prototype-v1',label:'Cellule côté droit',groups:[
+  {id:'0',name:'Rangements supérieurs',items:["Ballot d'essuie-tout plié",'Spray moussant désinfectant','Couvertures de survie','Draps']}
+ ]},
+ {key:'cs-tarascon-vsav1-fond-prototype-v1',label:'Cellule au fond',groups:[
+  {id:'general',name:'Matériel général de la cellule au fond',items:["Sac d'attelles (1 grande, 1 moyenne, 1 petite)",'Colliers cervicaux (1 adulte, 1 enfant)','Boîtes de gants (1 S, 1 M, 1 L)','Kit membres sectionnés','Brancard cuillère','Chaise de transport']},
+  {id:'gauche-haut',name:'Tiroir gauche haut',items:['Kit risque infectieux (ancien kit COVID)','Kit risque infectieux']},
+  {id:'gauche-bas',name:'Tiroir gauche bas',items:['Brancard souple']},
+  {id:'rouge',name:'Tiroir rouge',items:['Filets','Bandes 4x10','Bandes 4x5','Compresses stériles','Sparadraps','Paire de ciseaux de Jesco',"Pansement compressif d'urgence",'Pansements américains 10x20','Pansements américains 20x25','Poches de froid','Gel hydro-alcoolique','Écharpes triangulaires','"Dakin"','Petites doses de sérum physiologique','Grandes doses de sérum physiologique']},
+  {id:'bleu',name:'Tiroir bleu',items:['BAVU adulte','Filtre BAVU','Masques haute concentration','Lunettes à oxygène','Canules de Guédel (T2, T3, T4)',"Cathéter d'aspiration"]},
+  {id:'noir',name:'Tiroir noir',items:['BAVU pédiatrique','Filtre BAVU','Masques haute concentration pédiatriques','Lunettes haute concentration','Canules de Guédel (T0, T1)']},
+  {id:'vert',name:'Tiroir vert',items:['VOMIX',"Cathéter d'aspiration",'Raccords universels',"Tubulure d'aspiration",'Sac de rechange pour aspirateur de mucosités','Aspirateur de mucosités manuel','Champs stériles']},
+  {id:'jaune',name:'Tiroir jaune',items:['Peluche POMPI','Câbles ECG','Paires de lunettes de protection','Haricots jetables','Boîte OPCT','Sacs DASRI','Sacs DAOM']}
+ ]},
+ {key:'cs-tarascon-vsav1-oxygenotherapie-prototype-v1',label:"Sac d'oxygénothérapie",groups:[
+  {id:'poche-gauche',name:'Poche gauche — Oxygénothérapie enfant',items:['BAVU','Masques haute concentration','Lunettes à oxygène','Raccord universel',"Cathéter d'aspiration",'Canules de Guédel (T0, T1)']},
+  {id:'poche-droite',name:'Poche droite — Oxygénothérapie adulte',items:['BAVU','Masques haute concentration','Lunettes à oxygène','Raccord universel',"Cathéter d'aspiration",'Canules de Guédel (T2, T3, T4)']},
+  {id:'poche-milieu',name:'Poche du milieu',items:['Sac DASRI','Sac DAOM']},
+  {id:'interieur',name:'Intérieur du sac',items:['Couvertures de survie','Colliers cervicaux adultes','Colliers cervicaux pédiatriques',"Bouteille d'oxygène B5"]}
+ ]},
+ {key:'cs-tarascon-vsav1-prompt-secours-prototype-v1',label:'Sac prompt-secours',groups:[
+  {id:'milieu-haut',name:'Poche milieu haut',items:['Kit damage control']},
+  {id:'milieu-bas',name:'Poche milieu bas',items:['Kit brûlures']},
+  {id:'cote-droit',name:'Poche côté droit',items:['Couvertures de survie','Gants en taille L (quelques)']},
+  {id:'noire',name:'Pochette noire',items:['Couverture de survie','Pansements américains 10x20','Pansements américains 20x25',"Pansement compressif d'urgence"]},
+  {id:'bleue',name:'Grande pochette bleue',items:['Compresses stériles','Ciseaux de Jesco','Petites doses de sérum physiologique','Grandes doses de sérum physiologique','Paire de gants','Bandes 4x10','Bandes 4x5','Sachet de filets','Sparadraps','Poche de froid']},
+  {id:'rouge',name:'Pochette rouge',items:['Lunettes de protection']},
+  {id:'jaune',name:'Pochette jaune',items:['Sac DAOM','Sac DASRI','Paire de gants en latex','VOMIX','Écharpes triangulaires']},
+  {id:'violette',name:'Pochette violette',items:['Appareil pour prise de tension manuelle','Stéthoscope','Brassard enfant','Brassards adultes']}
+ ]},
+ {key:'cs-tarascon-vsav1-exterieur-prototype-v1',label:'Matériel extérieur et balisage',groups:[
+  {id:'exterieur',name:'Matériel extérieur et balisage',items:['Cônes de Lubeck','Extincteur','Commande','Mallette contenant 2 protections airbag (1 VL, 1 PL)','Outils de forcement (OFD)','Coupe-boulons','Triangle de signalisation']}
+ ]},
+ {key:'cs-tarascon-vsav1-poste-conduite-prototype-v1',label:'Poste de conduite',groups:[
+  {id:'portiere-conducteur',name:'Portière conducteur',items:['Câle','GHV équipier']},
+  {id:'siege-conducteur',name:'Siège conducteur',items:['En dessous : cric','Derrière : coupe-ceinture + brise-vitre']},
+  {id:'entre-sieges',name:'Entre siège conducteur - équipier',items:['Lampes']},
+  {id:'tableau-milieu',name:'Tableau de bord milieu',items:['Certificat accouchement','Certificat enquête noyade','Fiche SINUS','Protocole SSSM + ISP','Fiches traduction plastifiées (espagnol, néerlandais, allemand, anglais, italien)','Fiches décharges','Fiche réflexes détresses vitales (RCP, hémorragies, obstructions des voies aériennes)','Plans (Arignac, Mercus, Quié, Purpan)','Bloc fiches bilans']},
+  {id:'tableau-passager',name:'Tableau de bord côté passager',items:['Boîtes de gants (S, M, L, XL)','Boîte de masques à usage unique','Tablette avec fiche bilan','Au-dessus : GHV équipier']},
+  {id:'boite-gants',name:'Boîte à gants',items:['Pochette noire (manuel véhicule)',"Pochette bleue (carnet de bord carburant, carnet de bord autoroute, carnet d'entretien, contrôle technique)"]},
+  {id:'portiere-passager',name:'Portière passager',items:["GHV chef d'agrès"]},
+  {id:'siege-chef',name:"Siège chef d'agrès",items:['En dessous : ampoules + chaînes','Derrière : projecteur 12V']}
+ ]}
+];
+const directKey='cs-tarascon-vsav1-anomalies-directes-prototype-v1';
+const $=id=>document.getElementById(id);
+const make=(tag,cls,text)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(text!==undefined)n.textContent=text;return n;};
+let anomalies=[];
+function read(key){try{const raw=localStorage.getItem(key);return {value:raw===null?null:JSON.parse(raw),present:raw!==null,error:null};}catch(e){return {value:null,present:false,error:String(e)};}}
+function lookup(source,itemKey){for(const group of source.groups){for(let i=0;i<group.items.length;i++){if(group.id+'-'+i===itemKey)return {material:group.items[i],area:group.name};}}return {material:'Matériel non identifié ('+itemKey+')',area:'Emplacement à vérifier'};}
+function collect(){
+ const all=[];const diagnostics=[];
+ for(const source of sources){
+  const result=read(source.key);let count=0;
+  if(result.value && typeof result.value==='object' && !Array.isArray(result.value)){
+   for(const [itemKey,item] of Object.entries(result.value)){
+    if(!item || !Array.isArray(item.anomalies))continue;
+    const names=lookup(source,itemKey);
+    item.anomalies.forEach((an,index)=>{
+     if(!an || typeof an!=='object')return;
+     count++;
+     all.push({type:'verification',sourceKey:source.key,itemKey,index,location:source.label,area:names.area,material:names.material,description:String(an.text??''),createdAt:an.at||'',resolved:an.resolved===true,resolvedAt:an.resolvedAt||'',team:'',origin:'Vérifications'});
+    });
+   }
+  }
+  diagnostics.push({label:source.label,present:result.present,count,error:result.error});
+ }
+ const direct=read(directKey);let directCount=0;
+ if(Array.isArray(direct.value)){
+  direct.value.forEach((an,index)=>{
+   if(!an || typeof an!=='object')return;
+   directCount++;
+   all.push({type:'direct',sourceKey:directKey,index,id:an.id,location:an.location||'Protocole 4',area:'',material:an.material||'Anomalie générale',description:String(an.description??''),createdAt:an.createdAt||'',resolved:an.resolved===true,resolvedAt:an.resolvedAt||'',team:an.team||'',origin:an.source||'Protocole 4'});
+  });
+ }
+ diagnostics.push({label:'Protocole 4 — signalements directs',present:direct.present,count:directCount,error:direct.error||(direct.present&&!Array.isArray(direct.value)?'Format non reconnu':'')});
+ anomalies=all.sort((a,b)=>(Date.parse(b.createdAt)||0)-(Date.parse(a.createdAt)||0));
+ renderDiagnostics(diagnostics);
+ render();
+}
+function renderDiagnostics(rows){
+ const box=$('diagTable');box.replaceChildren();const table=make('table');const head=make('tr');['Source','Stockage','Anomalies'].forEach(t=>head.append(make('th','',t)));table.append(head);
+ rows.forEach(row=>{const tr=make('tr');tr.append(make('td','',row.label),make('td',row.error?'Erreur : '+row.error:row.present?'Présent':'Absent'),make('td','',String(row.count)));table.append(tr);});box.append(table);
+ $('origin').textContent='Adresse actuelle : '+location.origin+' · Chemin : '+location.pathname;
+}
+function dateLabel(raw){if(!raw)return 'Date non disponible';const d=new Date(raw);return Number.isNaN(d.getTime())?'Date non disponible':d.toLocaleString('fr-FR',{dateStyle:'medium',timeStyle:'short'});}
+function resolveAnomaly(an){
+ if(!confirm('Marquer cette anomalie comme résolue ?'))return;
+ try{
+  const result=read(an.sourceKey);if(result.error)throw Error(result.error);
+  if(an.type==='verification'){
+   const data=result.value;
+   if(!data || !data[an.itemKey] || !Array.isArray(data[an.itemKey].anomalies) || !data[an.itemKey].anomalies[an.index])throw Error('Anomalie introuvable dans le stockage.');
+   data[an.itemKey].anomalies[an.index].resolved=true;
+   data[an.itemKey].anomalies[an.index].resolvedAt=new Date().toISOString();
+   localStorage.setItem(an.sourceKey,JSON.stringify(data));
+  }else{
+   const data=result.value;
+   if(!Array.isArray(data) || !data[an.index] || (an.id!==undefined && data[an.index].id!==an.id))throw Error('Anomalie introuvable dans le stockage.');
+   data[an.index].resolved=true;
+   data[an.index].resolvedAt=new Date().toISOString();
+   localStorage.setItem(an.sourceKey,JSON.stringify(data));
+  }
+  collect();
+ }catch(e){alert("Impossible d'enregistrer la résolution : "+e.message);}
+}
+function render(){
+ const total=anomalies.length,active=anomalies.filter(a=>!a.resolved).length;
+ $('total').textContent=total;$('active').textContent=active;$('resolved').textContent=total-active;
+ const sourceSelect=$('sourceFilter');const current=sourceSelect.value;
+ sourceSelect.replaceChildren(new Option('Tous les emplacements','all'));
+ const locations=[...new Set(anomalies.map(a=>a.location))].sort((a,b)=>a.localeCompare(b,'fr'));
+ locations.forEach(loc=>sourceSelect.add(new Option(loc,loc)));
+ sourceSelect.value=locations.includes(current)?current:'all';
+ const q=$('search').value.trim().toLocaleLowerCase('fr');const status=$('statusFilter').value;const locationFilter=sourceSelect.value;
+ const shown=anomalies.filter(a=>(status==='all'||(status==='active'?!a.resolved:a.resolved))&&(locationFilter==='all'||a.location===locationFilter)&&[a.location,a.area,a.material,a.description,a.team,a.origin].join(' ').toLocaleLowerCase('fr').includes(q));
+ const root=$('list');root.replaceChildren();
+ if(!shown.length){root.append(make('div','empty',total===0?'Aucune anomalie trouvée dans les données locales de ce navigateur. Consulte le diagnostic ci-dessous.':'Aucune anomalie ne correspond aux filtres.'));return;}
+ shown.forEach(an=>{
+  const card=make('article','card');
+  card.append(make('span','status'+(an.resolved?' ok':''),an.resolved?'Résolue':'En cours'));
+  card.append(make('h3','',an.material));
+  card.append(make('div','muted',an.location+(an.area?' · '+an.area:'')+' · '+an.origin));
+  card.append(make('p','description',an.description||'Aucune description'));
+  card.append(make('div','muted','Signalée le : '+dateLabel(an.createdAt)));
+  if(an.team)card.append(make('div','muted','Équipe : '+an.team));
+  if(an.resolved){card.append(make('div','muted','Résolue le : '+dateLabel(an.resolvedAt)));}
+  else{const btn=make('button','secondary','Marquer comme résolue');btn.type='button';btn.style.marginTop='12px';btn.addEventListener('click',()=>resolveAnomaly(an));card.append(btn);}
+  root.append(card);
+ });
+}
+$('search').addEventListener('input',render);
+$('statusFilter').addEventListener('change',render);
+$('sourceFilter').addEventListener('change',render);
+$('refresh').addEventListener('click',collect);
+window.addEventListener('pageshow',collect);
+window.addEventListener('storage',collect);
+collect();
+</script>
+</body>
+</html>
