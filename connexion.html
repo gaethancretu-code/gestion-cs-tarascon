@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#a50913">
+<title>Connexion — CS Tarascon-sur-Ariège</title>
+<style>
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:#f5f6f9;color:#24272c;font-family:system-ui,-apple-system,Segoe UI,sans-serif}header{background:linear-gradient(125deg,#9b0712,#e32930);color:#fff;padding:34px 20px 40px;text-align:center}header h1{font-size:28px;margin:8px 0}header p{margin:0;color:#ffe5e5}main{width:min(100% - 30px,480px);margin:-18px auto 50px;position:relative}.card{background:white;border:1px solid #e2e5eb;border-radius:18px;padding:24px;box-shadow:0 6px 24px #0000000c;margin-bottom:16px}h2{font-size:21px;margin:0 0 18px}label{display:block;font-weight:650;margin:14px 0 7px}input{width:100%;border:1px solid #cbd0d9;border-radius:10px;padding:13px;font:inherit;font-size:16px}button{width:100%;margin-top:19px;border:0;border-radius:10px;background:#ae0e1a;color:white;font:inherit;font-weight:700;padding:14px;cursor:pointer}button:disabled{opacity:.6;cursor:wait}.secondary{background:white;color:#a50913;border:1px solid #a50913}.status{padding:13px;border-radius:10px;background:#eff2f7;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.5}.ok{background:#e9f7ee;color:#185b36}.error{background:#fff0ee;color:#92251d}.hidden{display:none}.muted{font-size:13px;line-height:1.5;color:#616875}.role{display:inline-block;background:#fce9eb;color:#930e19;padding:7px 11px;border-radius:20px;font-weight:700;margin:12px 0 4px}.links{display:grid;gap:10px;margin-top:16px}.links a{display:block;text-align:center;border:1px solid #cbd0d9;border-radius:10px;padding:12px;text-decoration:none;color:#29313c;font-weight:650}footer{text-align:center;font-size:12px;color:#69707a;padding:0 20px 30px}
+</style>
+</head>
+<body>
+<header><div aria-hidden="true" style="font-size:40px">🚒</div><h1>CS Tarascon-sur-Ariège</h1><p>Gestion des vérifications et inventaires</p></header>
+<main>
+<section class="card" id="loginCard"><h2>Connexion</h2><form id="loginForm"><label for="email">Adresse e-mail</label><input id="email" type="email" autocomplete="username" required><label for="password">Mot de passe</label><input id="password" type="password" autocomplete="current-password" required><button id="loginButton" type="submit">Se connecter</button></form></section>
+<section class="card hidden" id="accountCard"><h2>Bienvenue</h2><div id="accountEmail" class="muted"></div><div id="roleBadge" class="role hidden"></div><p id="accountMessage"></p><div class="links hidden" id="moduleLinks"><a href="vsav1.html">Voir le VSAV 1 (version actuelle)</a></div><button id="logoutButton" type="button" class="secondary">Se déconnecter</button><p class="muted">Attention : les pages actuelles du VSAV 1 ne sont pas encore protégées et leurs données ne sont pas synchronisées.</p></section>
+<section class="card"><h2>État de la connexion</h2><div id="status" class="status" role="status" aria-live="polite">Initialisation de Firebase…</div></section>
+</main><footer>Version de préparation — ne pas utiliser pour des données opérationnelles sensibles.</footer>
+<script type="module">
+import {initializeApp} from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js';
+import {getAuth,signInWithEmailAndPassword,onAuthStateChanged,signOut} from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js';
+import {getFirestore,doc,getDocFromServer} from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js';
+const firebaseConfig={apiKey:'AIzaSyBcw1qC28Cz11nXKtVn97gmb4kRDF5J_0s',authDomain:'gestion-cs-tarascon.firebaseapp.com',projectId:'gestion-cs-tarascon',storageBucket:'gestion-cs-tarascon.firebasestorage.app',messagingSenderId:'863040765531',appId:'1:863040765531:web:5e31343e2c6141a3b3897e'};
+const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app);
+const $=id=>document.getElementById(id);
+function status(message,kind=''){$('status').textContent=message;$('status').className='status '+kind;}
+function showLoggedOut(){$('loginCard').classList.remove('hidden');$('accountCard').classList.add('hidden');$('moduleLinks').classList.add('hidden');$('roleBadge').classList.add('hidden');}
+function friendly(err){const c=err?.code||'';return ({'auth/invalid-credential':'Adresse e-mail ou mot de passe incorrect.','auth/invalid-email':'Adresse e-mail invalide.','auth/too-many-requests':'Trop de tentatives. Réessaie plus tard.','auth/network-request-failed':'Connexion réseau indisponible.','permission-denied':'Accès refusé par les règles Firestore.','unavailable':'Serveur Firebase momentanément indisponible.'})[c]||('Erreur : '+(c||'inconnue'));}
+$('loginForm').addEventListener('submit',async e=>{e.preventDefault();$('loginButton').disabled=true;status('Connexion en cours…');try{await signInWithEmailAndPassword(auth,$('email').value.trim(),$('password').value);$('password').value='';}catch(err){status(friendly(err),'error');$('password').value='';}finally{$('loginButton').disabled=false;}});
+$('logoutButton').addEventListener('click',async()=>{try{await signOut(auth);status('Déconnecté.');}catch(err){status(friendly(err),'error');}});
+let checkVersion=0;
+onAuthStateChanged(auth,async user=>{const version=++checkVersion;if(!user){showLoggedOut();status('Prêt : connecte-toi avec ton compte Firebase.');return;}
+$('loginCard').classList.add('hidden');$('accountCard').classList.remove('hidden');$('accountEmail').textContent=user.email||'Compte connecté';$('roleBadge').classList.add('hidden');$('moduleLinks').classList.add('hidden');$('accountMessage').textContent='Vérification des autorisations…';status('Authentification réussie. Vérification du compte…');
+try{const snap=await getDocFromServer(doc(db,'users',user.uid));if(version!==checkVersion||auth.currentUser?.uid!==user.uid)return;if(!snap.exists()){status('Compte authentifié, mais aucune fiche utilisateur correspondante. Contacte un administrateur.','error');$('accountMessage').textContent='Accès non autorisé.';return;}
+const data=snap.data();if(data.active!==true){status('Compte inactif : accès refusé.','error');$('accountMessage').textContent='Ton compte doit être activé par un administrateur.';return;}
+const roles={admin:'Administrateur',referent:'Référent',user:'Utilisateur'};const label=roles[data.role];if(!label){status('Rôle non reconnu : accès refusé.','error');$('accountMessage').textContent='Le rôle du compte doit être vérifié.';return;}
+$('roleBadge').textContent=label;$('roleBadge').classList.remove('hidden');$('accountMessage').textContent='Ton compte est actif et ton rôle est reconnu.';status('Connexion réussie. Compte actif. Rôle : '+label+'.','ok');
+// Les liens ci-dessous sont uniquement des raccourcis vers des pages encore publiques.
+$('moduleLinks').classList.remove('hidden');
+}catch(err){if(version===checkVersion&&auth.currentUser?.uid===user.uid){status('Impossible de vérifier les autorisations : '+friendly(err),'error');$('accountMessage').textContent='Accès non autorisé tant que la vérification échoue.';}}},err=>status('Erreur d’authentification : '+friendly(err),'error'));
+</script>
+</body></html>
